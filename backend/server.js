@@ -229,8 +229,6 @@ async function start() {
   }
 }
 
-const uploadRoutes = require('./routes/uploadRoutes');
-app.use('/api/uploads', uploadRoutes);
 
 start();
 
