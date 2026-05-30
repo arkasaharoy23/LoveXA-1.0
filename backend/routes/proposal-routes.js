@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router  = express.Router();
-const uploadMiddleware = require('../middleware/uploadMiddleware');
+const uploadMiddleware = require('../middleware/error-middleware');
 
 const {
   createProposal,
