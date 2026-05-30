@@ -58,12 +58,13 @@ function resolveIndexFile(htmlRoot) {
 }
 
 function resolveFrontend() {
-  const nestedHtml   = path.join(ROOT, 'frontend', 'html');
+  //const nestedHtml   = path.join(ROOT, 'frontend');
+  const nestedHtml = path.join(ROOT, 'frontend');
   const nestedAssets = path.join(ROOT, 'frontend', 'assets');
   const flatAssets   = path.join(ROOT, 'assets');
   const flatIndex    = resolveIndexFile(ROOT);
 
-  if (fs.existsSync(nestedHtml)) {
+  if (fs.existsSync(path.join(nestedHtml, 'index.html'))) {
     const indexFile = resolveIndexFile(nestedHtml);
     return {
       layout:     'nested',
