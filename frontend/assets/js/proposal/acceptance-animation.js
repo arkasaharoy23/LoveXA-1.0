@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = '/api';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
 
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
