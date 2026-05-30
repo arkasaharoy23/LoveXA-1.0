@@ -28,6 +28,7 @@ router.patch ('/:id/passcode',    requireJson, setPasscode);
 router.post  ('/:id/verify',      requireJson, verifyPasscode);
 router.get   ('/:id/summary',                  getProposalSummary);
 router.patch ('/:id/photos',      requireJson, updatePhotos);
+router.post('/:id/photos', uploadMiddleware, controllerFunction);
 router.patch ('/:id/bouquet',     requireJson, updateBouquet);
 router.patch ('/:id',             requireJson, updateProposal);
 router.get   ('/:id',                          getProposal);
