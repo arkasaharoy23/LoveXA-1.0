@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
 
   
   const progressBar  = document.getElementById('progress-bar');

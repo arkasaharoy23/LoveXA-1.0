@@ -93,13 +93,10 @@ if (isProduction) {
 }
 
 app.use(cors({
-  origin(origin, callback) {
-    if (isOriginAllowed(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin "${origin}" is not allowed.`));
-  },
-  methods:        ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  origin: 'https://love-xa-1-0.vercel.app',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials:    true,
+  credentials: true
 }));
 
 app.use(express.json({ limit: '25mb' }));
