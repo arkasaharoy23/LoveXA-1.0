@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE   = '/api';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
   const MAX_MEMORY = 10;
   const MAX_KB     = 500;
   const MAX_DIM    = 1200;
