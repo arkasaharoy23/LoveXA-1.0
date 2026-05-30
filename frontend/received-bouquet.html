@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="A bouquet made just for you — Forever Yours." />
+  <title>For You — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/received-bouquet.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+
+  
+  <a href="index.html" class="recv-logo" aria-label="Forever Yours">
+    Forever <span>Yours</span>
+  </a>
+
+
+  
+  <div class="bouquet-receive-page" id="bouquet-receive-page">
+
+    
+    <div class="bouquet-receive-page__glow" aria-hidden="true"></div>
+
+    
+    <div class="bouquet-stage" id="bouquet-stage"
+         role="button" tabindex="0"
+         aria-label="Tap the bouquet to continue"
+         onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+
+      
+      <div class="bouquet-halo" id="bouquet-halo" aria-hidden="true"></div>
+
+      
+      <div class="gift-box-wrap" id="gift-box-wrap" aria-label="Gift box">
+
+        
+        <div class="box-lid" id="box-lid">
+          <span class="box-bow" id="box-bow" aria-hidden="true">🎀</span>
+        </div>
+
+        
+        <div class="box-body" id="box-body">
+
+          
+          <div class="box-body-glow" id="box-body-glow" aria-hidden="true"></div>
+
+          
+          <div class="flowers-container" id="flowers-container"
+               role="img" aria-label="Bouquet of flowers">
+          </div>
+
+          
+          <div class="bouquet-ribbon-band" id="bouquet-ribbon-band" aria-hidden="true">
+            <span class="ribbon-line" id="ribbon-line-1"></span>
+            <span class="ribbon-bow-icon" id="ribbon-bow-icon">🎀</span>
+            <span class="ribbon-line" id="ribbon-line-2"></span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  
+  <p class="tap-hint" id="tap-hint" aria-hidden="true">
+    Tap the bouquet to continue
+  </p>
+
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/bouquet/bouquet-storage.js"></script>
+  <script src="assets/js/bouquet/bouquet-render.js"></script>
+
+</body>
+</html>

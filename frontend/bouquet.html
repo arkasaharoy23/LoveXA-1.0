@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Build your bouquet — Forever Yours." />
+  <title>Build Your Bouquet — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/bouquet.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="progress-bar-wrap" role="progressbar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
+    <div class="progress-bar" style="width:60%"></div>
+  </div>
+
+  
+  <header class="navbar" role="banner">
+    <div class="container">
+      <nav class="navbar__inner" aria-label="Main navigation">
+        <a href="index.html" class="navbar__logo">Forever <span>Yours</span></a>
+        <ul class="navbar__links" role="list">
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="create-proposal.html" class="navbar__cta">Craft the Perfect Moment</a></li>
+        </ul>
+        <button class="navbar__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+
+  
+  <main class="bouquet-page" id="main-content">
+
+    <div class="bouquet-page__glow" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="bouquet-layout">
+
+
+        
+        <div class="bouquet-builder">
+
+          
+          <header class="bouquet-header">
+            <span class="bouquet-header__step">Step 3 of 5 &nbsp;·&nbsp; Bouquet</span>
+            <h1 class="bouquet-header__title">
+              Build her<br /><em>bouquet</em>
+            </h1>
+            <p class="bouquet-header__sub">
+              Every flower you choose tells her something — pick each one with intention
+            </p>
+          </header>
+
+          
+          <div class="step-tabs" role="tablist" aria-label="Bouquet builder steps">
+
+            <button class="step-tab active" id="tab-1" role="tab"
+                    aria-selected="true" aria-controls="panel-1">
+              <span class="step-tab__num">1</span>
+              Flowers
+            </button>
+
+            <button class="step-tab" id="tab-2" role="tab"
+                    aria-selected="false" aria-controls="panel-2">
+              <span class="step-tab__num">2</span>
+              Ribbon
+            </button>
+
+            <button class="step-tab" id="tab-3" role="tab"
+                    aria-selected="false" aria-controls="panel-3">
+              <span class="step-tab__num">3</span>
+              Wrapping
+            </button>
+
+          </div>
+
+
+          
+          <div class="builder-panel active" id="panel-1"
+               role="tabpanel" aria-labelledby="tab-1">
+
+            <h2 class="panel-title">Choose your flowers</h2>
+            <p class="panel-hint">
+              Click to add — right-click to remove &nbsp;·&nbsp; Mix as many as you like
+            </p>
+
+            
+            <div class="flower-grid" id="flower-grid"
+                 role="group" aria-label="Flower selection"></div>
+
+            
+            <p class="flower-counter" id="flower-count" aria-live="polite">
+              <span>0</span> flowers selected
+            </p>
+
+            <div class="builder-actions">
+              <a href="upload-memories.html" class="btn-step-back">← Back</a>
+              <button class="btn-step-next" id="btn-next-1" disabled
+                      aria-label="Continue to ribbon selection">
+                <span>Choose Ribbon →</span>
+              </button>
+            </div>
+
+          </div>
+
+
+          
+          <div class="builder-panel" id="panel-2"
+               role="tabpanel" aria-labelledby="tab-2">
+
+            <h2 class="panel-title">Choose your ribbon</h2>
+            <p class="panel-hint">
+              One ribbon ties it all together — choose the one that feels right
+            </p>
+
+            
+            <div class="ribbon-grid" id="ribbon-grid"
+                 role="group" aria-label="Ribbon selection"></div>
+
+            <div class="builder-actions">
+              <button class="btn-step-back" id="btn-back-2">← Back</button>
+              <button class="btn-step-next" id="btn-next-2" disabled
+                      aria-label="Continue to wrapping selection">
+                <span>Choose Wrapping →</span>
+              </button>
+            </div>
+
+          </div>
+
+
+          
+          <div class="builder-panel" id="panel-3"
+               role="tabpanel" aria-labelledby="tab-3">
+
+            <h2 class="panel-title">Choose your wrapping</h2>
+            <p class="panel-hint">
+              The wrapping is the first thing she sees — make it count
+            </p>
+
+            
+            <div class="wrapping-grid" id="wrapping-grid"
+                 role="group" aria-label="Wrapping selection"></div>
+
+            <div class="builder-actions">
+              <button class="btn-step-back" id="btn-back-3">← Back</button>
+              <button class="btn-build-bouquet" id="btn-build-bouquet" disabled
+                      aria-label="Preview your bouquet">
+                <span>Preview Bouquet →</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        
+        <aside class="bouquet-preview-card" aria-label="Live bouquet preview" aria-live="polite">
+
+          <span class="preview-card__label">Your Bouquet</span>
+
+          
+          <div class="preview-card__section">
+            <span class="preview-card__section-label">Flowers</span>
+            <div class="preview-flowers" id="preview-flowers">
+              <span class="preview-empty">No flowers yet…</span>
+            </div>
+          </div>
+
+          
+          <div class="preview-card__section">
+            <span class="preview-card__section-label">Ribbon</span>
+            <div class="preview-ribbon" id="preview-ribbon">
+              <span class="preview-empty">No ribbon yet…</span>
+            </div>
+          </div>
+
+          
+          <div class="preview-card__section">
+            <span class="preview-card__section-label">Wrapping</span>
+            <div class="preview-wrapping" id="preview-wrapping">
+              <span class="preview-empty">No wrapping yet…</span>
+            </div>
+          </div>
+
+          
+          <p class="preview-card__status" id="preview-status">
+            Your bouquet is taking shape…
+          </p>
+
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/services/local-storage.js"></script>
+  <script src="assets/js/creator-flow.js"></script>
+  <script src="assets/js/bouquet/bouquet-storage.js"></script>
+  <script src="assets/js/bouquet/bouquet-builder.js"></script>
+
+</body>
+</html>

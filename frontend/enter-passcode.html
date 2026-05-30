@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Protect your proposal or unlock your moment — Forever Yours." />
+  <title>Passcode — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/passcode.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="progress-bar-wrap" id="creator-progress"
+       role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"
+       style="display:none">
+    <div class="progress-bar" style="width:100%"></div>
+  </div>
+
+  
+  <div class="passcode-page__bg"        aria-hidden="true"></div>
+  <div class="passcode-page__particles" aria-hidden="true"></div>
+
+
+  
+  <header class="navbar" id="creator-navbar" role="banner" style="display:none">
+    <div class="container">
+      <nav class="navbar__inner" aria-label="Main navigation">
+        <a href="index.html" class="navbar__logo">Forever <span>Yours</span></a>
+        <ul class="navbar__links" role="list">
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="create-proposal.html" class="navbar__cta">Craft the Perfect Moment</a></li>
+        </ul>
+        <button class="navbar__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <header class="navbar--minimal" id="recipient-navbar" role="banner" style="display:none">
+    <a href="index.html" class="navbar__logo" aria-label="Forever Yours Home">
+      Forever <span>Yours</span>
+    </a>
+  </header>
+
+
+ 
+  <main class="creator-page" id="creator-mode" style="display:none" aria-label="Set passcode">
+
+    <div class="creator-card">
+
+      
+      <span class="creator-card__step" aria-label="Step 5 of 5">05 &nbsp;/&nbsp; 05</span>
+
+      
+      <div class="creator-card__ornament" aria-hidden="true">
+        <span class="creator-card__ornament-line"></span>
+        <span class="creator-card__ornament-diamond"></span>
+        <span class="creator-card__ornament-line"></span>
+      </div>
+
+      
+      <h1 class="creator-card__title">
+        Protect your<br /><em>moment</em>
+      </h1>
+
+      
+      <p class="creator-card__sub">
+        Create a 6-digit secret passcode — your recipient will need this exact code to unlock
+        everything you've crafted for them
+      </p>
+
+      
+      <div class="creator-inputs" role="group" aria-label="Passcode creation">
+
+        
+        <div class="creator-field">
+          <label class="creator-field__label" for="creator-pass1">Create passcode</label>
+          <div class="creator-field__wrap">
+            <input
+              type="password"
+              id="creator-pass1"
+              class="creator-input"
+              placeholder="••••••"
+              autocomplete="new-password"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              minlength="6"
+              maxlength="6"
+              aria-label="Create 6-digit passcode"
+              aria-required="true"
+            />
+            <span class="creator-underline" aria-hidden="true"></span>
+            <button class="creator-eye" id="eye-creator1"
+                    type="button" aria-label="Show passcode">👁</button>
+          </div>
+        </div>
+
+        
+        <div class="creator-field">
+          <label class="creator-field__label" for="creator-pass2">Confirm passcode</label>
+          <div class="creator-field__wrap">
+            <input
+              type="password"
+              id="creator-pass2"
+              class="creator-input"
+              placeholder="••••••"
+              autocomplete="new-password"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              minlength="6"
+              maxlength="6"
+              aria-label="Confirm 6-digit passcode"
+              aria-required="true"
+            />
+            <span class="creator-underline" aria-hidden="true"></span>
+            <button class="creator-eye" id="eye-creator2"
+                    type="button" aria-label="Show confirm passcode">👁</button>
+          </div>
+        </div>
+
+      </div>
+
+      
+      <p class="creator-match" id="creator-match" aria-live="polite"></p>
+
+      
+      <button
+        class="btn-set-creator"
+        id="btn-set-creator"
+        disabled
+        aria-label="Set passcode and continue"
+      >
+        <span>Set Passcode</span>
+      </button>
+
+    </div>
+
+  </main>
+
+  
+  <div class="creator-success" id="creator-success"
+       role="status" aria-live="assertive">
+    <div class="creator-success__check" aria-hidden="true">✓</div>
+    <p class="creator-success__text">Passcode set</p>
+    <p class="creator-success__sub">Preparing your shareable link…</p>
+  </div>
+
+
+  
+  <main class="passcode-page" id="recipient-mode" style="display:none"
+        aria-label="Enter passcode to unlock">
+
+    <div class="passcode-card" role="main">
+
+     
+      <div class="passcode-card__seal" aria-hidden="true">
+        <span class="passcode-card__seal-icon">🔒</span>
+      </div>
+
+      
+      <p class="passcode-card__intro">A moment has been created for you</p>
+
+      
+      <h1 class="passcode-card__title">
+        Enter your<br /><em>6-digit passcode</em>
+      </h1>
+
+      
+      <p class="passcode-card__from" id="passcode-from" aria-live="polite">
+        Something beautiful is waiting inside
+      </p>
+
+      
+      <div class="pin-wrap" role="group" aria-label="Passcode entry">
+
+        <input
+          type="password"
+          id="pin-hidden-input"
+          class="pin-hidden-input"
+          autocomplete="one-time-code"
+          inputmode="numeric"
+          maxlength="6"
+          pattern="[0-9]{6}"
+          aria-label="Enter 6-digit passcode"
+          aria-describedby="passcode-error passcode-hint-msg"
+        />
+
+        <div class="pin-boxes" id="pin-boxes" aria-hidden="true">
+          <div class="pin-box" data-index="0" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+          <div class="pin-box" data-index="1" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+          <div class="pin-box" data-index="2" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+          <div class="pin-box" data-index="3" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+          <div class="pin-box" data-index="4" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+          <div class="pin-box" data-index="5" tabindex="-1">
+            <span class="pin-dot" aria-hidden="true"></span>
+            <span class="pin-char" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        
+        <div class="pin-toggle-row" id="pin-toggle" role="button"
+             tabindex="0" aria-label="Toggle passcode visibility"
+             onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+          <span>Show passcode</span>
+        </div>
+
+        
+        <p class="passcode-error" id="passcode-error" role="alert" aria-live="assertive"></p>
+
+        
+        <p class="passcode-hint-msg" id="passcode-hint-msg" aria-live="polite">
+          Enter exactly 6 digits — no more, no less.
+        </p>
+
+      </div>
+
+      
+      <button class="btn-unlock" id="btn-unlock" disabled aria-label="Unlock proposal">
+        <span>Unlock</span>
+      </button>
+
+    </div>
+
+  </main>
+
+  
+  <div class="unlock-success" id="unlock-success"
+       role="status" aria-live="assertive" aria-label="Unlocked successfully">
+    <div class="unlock-success__icon" aria-hidden="true">🔓</div>
+    <p class="unlock-success__text">Unlocked</p>
+
+    
+    <div class="unlock-success__photo-wrap" id="couple-photo-wrap" style="display:none">
+      <img id="couple-photo-img" src="" alt="A photo of you two" />
+    </div>
+
+    
+    <p class="unlock-success__names" id="unlock-names" style="display:none"></p>
+
+    <p class="unlock-success__sub">Opening your moment…</p>
+  </div>
+
+
+ 
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/services/local-storage.js"></script>
+  <script src="assets/js/creator-flow.js"></script>
+  <script src="assets/js/passcode/validate-passcode.js"></script>
+
+</body>
+</html>

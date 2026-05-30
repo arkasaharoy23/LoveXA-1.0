@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Upload your memories — Forever Yours." />
+  <title>Upload Memories — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/upload.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="progress-bar-wrap" role="progressbar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="40">
+    <div class="progress-bar" id="progress-bar" style="width:40%"></div>
+  </div>
+
+  
+  <header class="navbar" role="banner">
+    <div class="container">
+      <nav class="navbar__inner" aria-label="Main navigation">
+        <a href="index.html" class="navbar__logo">Forever <span>Yours</span></a>
+        <ul class="navbar__links" role="list">
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="create-proposal.html" class="navbar__cta">Craft the Perfect Moment</a></li>
+        </ul>
+        <button class="navbar__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+
+  
+  <main class="upload-page" id="main-content">
+
+    <div class="upload-page__glow" aria-hidden="true"></div>
+
+    <div class="container">
+
+      
+      <header class="upload-header reveal">
+
+        <span class="upload-header__step">Step 2 of 5 &nbsp;·&nbsp; Memories</span>
+
+        <div class="upload-header__ornament" aria-hidden="true">
+          <span class="upload-header__ornament-line"></span>
+          <span class="upload-header__ornament-diamond"></span>
+          <span class="upload-header__ornament-line"></span>
+        </div>
+
+        <h1 class="upload-header__title">
+          The moments that made<br /><em>you, you</em>
+        </h1>
+        <p class="upload-header__sub">
+          Upload a photo of you two, then add the memories that tell your story
+        </p>
+
+      </header>
+
+
+      
+      <div class="upload-sections">
+
+
+        
+        <section class="upload-section reveal delay-1" aria-labelledby="couple-title">
+
+          <span class="upload-section__number" aria-hidden="true">01</span>
+          <span class="upload-section__label">Required</span>
+          <h2 class="upload-section__title" id="couple-title">Your Photo Together</h2>
+          <p class="upload-section__hint">
+            This photo will be shown to your recipient after they unlock the proposal
+            &nbsp;·&nbsp; JPEG, PNG or WebP &nbsp;·&nbsp; Max 500KB
+          </p>
+
+          
+          <div
+            class="drop-zone"
+            id="couple-drop-zone"
+            role="button"
+            tabindex="0"
+            aria-label="Upload couple photo — drag and drop or click to browse"
+            onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('couple-file-input').click()"
+          >
+            <input
+              type="file"
+              id="couple-file-input"
+              accept="image/jpeg,image/jpg,image/png,image/webp"
+              aria-hidden="true"
+              tabindex="-1"
+            />
+            <span class="drop-zone__icon" aria-hidden="true">🖼️</span>
+            <p class="drop-zone__text">Drop your photo here</p>
+            <p class="drop-zone__sub">
+              or <span onclick="document.getElementById('couple-file-input').click()">browse files</span>
+            </p>
+            <p class="drop-zone__maxed-msg" aria-hidden="true">Photo uploaded</p>
+          </div>
+
+          
+          <div class="couple-preview" id="couple-preview" aria-label="Couple photo preview">
+            <img id="couple-img" src="" alt="Your couple photo" />
+            <button class="couple-preview__remove" id="couple-remove"
+                    aria-label="Remove couple photo" title="Remove photo">✕</button>
+            <button class="couple-preview__change" id="couple-change"
+                    aria-label="Change couple photo">Change Photo</button>
+            <button class="couple-preview__crop" id="couple-crop"
+                    aria-label="Crop couple photo">✂ Crop</button>
+          </div>
+
+          
+          <p class="upload-error" id="couple-error" role="alert" aria-live="polite"></p>
+
+        </section>
+
+
+        
+        <section class="upload-section reveal delay-2" aria-labelledby="memory-title">
+
+          <span class="upload-section__number" aria-hidden="true">02</span>
+          <span class="upload-section__label">Optional &nbsp;·&nbsp; Up to 10 photos</span>
+          <h2 class="upload-section__title" id="memory-title">Your Memories Together</h2>
+          <p class="upload-section__hint">
+            These will appear on the memory lane page your recipient walks through
+            &nbsp;·&nbsp; JPEG, PNG or WebP &nbsp;·&nbsp; Max 500KB each
+          </p>
+
+          
+          <div class="memory-counter" aria-live="polite">
+            <span class="memory-counter__text">
+              Photos added: <span class="memory-counter__num" id="memory-count">0 / 10</span>
+            </span>
+          </div>
+
+          
+          <div
+            class="drop-zone"
+            id="memory-drop-zone"
+            role="button"
+            tabindex="0"
+            aria-label="Upload memory photos — drag and drop or click to browse"
+            onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('memory-file-input').click()"
+          >
+            <input
+              type="file"
+              id="memory-file-input"
+              accept="image/jpeg,image/jpg,image/png,image/webp"
+              multiple
+              aria-hidden="true"
+              tabindex="-1"
+            />
+            <span class="drop-zone__icon" aria-hidden="true">📸</span>
+            <p class="drop-zone__text">Drop your memories here</p>
+            <p class="drop-zone__sub">
+              or <span onclick="document.getElementById('memory-file-input').click()">browse files</span>
+              &nbsp;·&nbsp; Select multiple
+            </p>
+            <p class="drop-zone__maxed-msg" aria-hidden="true">Maximum 10 photos reached</p>
+          </div>
+
+          
+          <div class="memory-grid" id="memory-grid"
+               role="list" aria-label="Uploaded memory photos"></div>
+
+          
+          <p class="upload-error" id="memory-error" role="alert" aria-live="polite"></p>
+
+        </section>
+
+      </div>
+
+
+      
+      <div class="upload-actions reveal">
+
+        <a href="create-proposal.html" class="btn-back-page" aria-label="Back to create proposal">
+          ← Back
+        </a>
+
+        <button
+          class="btn-save-continue"
+          id="btn-save-continue"
+          disabled
+          aria-label="Save photos and continue to bouquet builder"
+        >
+          <span>Save &amp; Continue</span>
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </div>
+
+    </div>
+  </main>
+
+
+  
+  <div class="crop-modal" id="crop-modal" role="dialog" aria-modal="true"
+       aria-label="Crop photo">
+    <div class="crop-modal__card">
+
+      <div class="crop-modal__header">
+        <div>
+          <p class="crop-modal__title">Crop Photo</p>
+          <p class="crop-modal__ratio" id="crop-ratio-label">Drag to adjust</p>
+        </div>
+        <button class="crop-modal__close" id="crop-modal-close"
+                aria-label="Close crop modal">✕</button>
+      </div>
+
+      <p class="crop-modal__hint">
+        Drag to move &nbsp;·&nbsp; Drag corners to resize &nbsp;·&nbsp; Scroll to zoom
+      </p>
+
+      <div class="crop-modal__body">
+        <img id="crop-image" src="" alt="Image to crop" />
+      </div>
+
+      <div class="crop-modal__footer">
+        <button class="btn-crop-cancel" id="btn-crop-cancel">Cancel</button>
+        <button class="btn-crop-apply" id="btn-crop-apply">
+          <span>Apply Crop</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/services/local-storage.js"></script>
+  <script src="assets/js/creator-flow.js"></script>
+  <script src="assets/js/forms/photo-upload.js"></script>
+
+</body>
+</html>

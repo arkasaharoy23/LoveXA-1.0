@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A letter for you — Forever Yours." />
+  <title>A Letter For You — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Dancing+Script:wght@400;600&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/proposal.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <audio id="bg-music" preload="auto" aria-hidden="true">
+    <source src="assets/music/acceptence.mp3" type="audio/mpeg" />
+  </audio>
+
+  
+  <div class="tap-to-start hidden" id="tap-to-start"
+       role="button" tabindex="0" aria-label="Tap to begin music">
+    <span class="tap-to-start__icon" aria-hidden="true">♥</span>
+    <p class="tap-to-start__text">Tap to begin</p>
+    <p class="tap-to-start__sub">A letter is waiting for you</p>
+  </div>
+
+  
+  <main class="proposal-page" id="proposal-page">
+
+    
+    <div class="proposal-page__bg"   aria-hidden="true"></div>
+    <div class="proposal-page__dust" aria-hidden="true"></div>
+
+    
+    <article class="letter-card" id="letter-card" aria-label="Proposal letter">
+
+      <div class="letter-paper">
+
+        
+        <div class="letter-lines"  aria-hidden="true"></div>
+        
+        <div class="letter-margin" aria-hidden="true"></div>
+
+        
+        <div class="wax-seal" id="wax-seal" aria-hidden="true">♥</div>
+
+        
+        <p class="letter-date" id="letter-date" aria-hidden="true"></p>
+
+        
+        <h1 class="letter-salutation" id="letter-salutation">
+          My dearest <span id="salutation-name"></span>
+        </h1>
+
+        
+        <div class="letter-body" id="letter-body"
+             aria-live="polite" aria-label="Proposal message">
+        </div>
+
+        
+        <div class="letter-signature" id="letter-signature" aria-label="Signed by sender">
+          <div class="letter-signature-line" aria-hidden="true"></div>
+          With all my love,<br />
+          <span id="signature-name" style="font-size:1.3em;"></span>
+        </div>
+
+        
+        <div class="letter-divider" id="letter-divider" aria-hidden="true"></div>
+
+        
+        <p class="proposal-question" id="proposal-question">
+          Will you be mine… forever?
+        </p>
+
+        
+        <div class="proposal-buttons" id="proposal-buttons">
+          <button class="btn-yes" id="btn-yes" aria-label="Yes, I will marry you">
+            Yes ♥
+          </button>
+          <button class="btn-no" id="btn-no" aria-label="No">
+            No
+          </button>
+        </div>
+
+      </div>
+
+    </article>
+
+  </main>
+
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/proposal/no-button-escape.js"></script>
+  <script src="assets/js/proposal/final-proposal.js"></script>
+
+</body>
+</html>

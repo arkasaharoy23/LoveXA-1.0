@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create your personalised proposal — Forever Yours." />
+  <title>Create Your Proposal — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/form.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  
+  <header class="navbar" role="banner">
+    <div class="container">
+      <nav class="navbar__inner" aria-label="Main navigation">
+        <a href="index.html" class="navbar__logo">Forever <span>Yours</span></a>
+        <ul class="navbar__links" role="list">
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="create-proposal.html" class="navbar__cta">Craft the Perfect Moment</a></li>
+        </ul>
+        <button class="navbar__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+  <main class="form-page" id="main-content">
+
+    <div class="form-page__glow" aria-hidden="true"></div>
+
+    
+    <div class="steps-wrapper" role="form" aria-label="Proposal creation form">
+
+      
+      <div class="step active" id="step-1" role="group" aria-labelledby="step1-question">
+
+        <span class="step__counter" aria-label="Step 1 of 3">01 &nbsp;/&nbsp; 03</span>
+
+        <div class="step__ornament" aria-hidden="true">
+          <span class="step__ornament-line"></span>
+          <span class="step__ornament-diamond"></span>
+          <span class="step__ornament-line"></span>
+        </div>
+
+        <h1 class="step__question" id="step1-question">What is your name?</h1>
+        <p class="step__hint">The name that will sign this moment forever</p>
+
+        <div class="field-wrap">
+          <input
+            type="text"
+            id="input-name"
+            class="input-line"
+            placeholder="Your name…"
+            autocomplete="given-name"
+            maxlength="60"
+            aria-label="Your name"
+            aria-required="true"
+          />
+          <span class="input-underline" aria-hidden="true"></span>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-next" id="btn-next-1" disabled aria-label="Continue to step 2">
+            <span>Continue</span>
+          </button>
+        </div>
+
+      </div>
+
+      
+      <div class="step" id="step-2" role="group" aria-labelledby="step2-question">
+
+        <span class="step__counter" aria-label="Step 2 of 3">02 &nbsp;/&nbsp; 03</span>
+
+        <div class="step__ornament" aria-hidden="true">
+          <span class="step__ornament-line"></span>
+          <span class="step__ornament-diamond"></span>
+          <span class="step__ornament-line"></span>
+        </div>
+
+        <h2 class="step__question" id="step2-question">Who is this for?</h2>
+        <p class="step__hint">The name of the one who will receive this forever</p>
+
+        <div class="field-wrap">
+          <input
+            type="text"
+            id="input-for"
+            class="input-line"
+            placeholder="Their name…"
+            autocomplete="off"
+            maxlength="60"
+            aria-label="Recipient's name"
+            aria-required="true"
+          />
+          <span class="input-underline" aria-hidden="true"></span>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" id="btn-back-2" aria-label="Go back to step 1">← Back</button>
+          <button class="btn-next" id="btn-next-2" disabled aria-label="Continue to step 3">
+            <span>Continue</span>
+          </button>
+        </div>
+
+      </div>
+
+      
+      <div class="step" id="step-3" role="group" aria-labelledby="step3-question">
+
+        <span class="step__counter" aria-label="Step 3 of 3">03 &nbsp;/&nbsp; 03</span>
+
+        <div class="step__ornament" aria-hidden="true">
+          <span class="step__ornament-line"></span>
+          <span class="step__ornament-diamond"></span>
+          <span class="step__ornament-line"></span>
+        </div>
+
+        <h2 class="step__question" id="step3-question">Write your proposal</h2>
+        <p class="step__hint">In your own words — from your heart to theirs</p>
+
+        <div class="field-wrap">
+          <textarea
+            id="input-message"
+            class="input-textarea"
+            placeholder="From the moment I first saw you…"
+            aria-label="Your proposal message"
+            aria-required="true"
+            rows="10"
+            maxlength="2000"
+          ></textarea>
+          <span class="char-count" id="char-count" aria-live="polite">0 / 2000</span>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" id="btn-back-3" aria-label="Go back to step 2">← Back</button>
+          <button class="btn-submit" id="btn-submit" disabled aria-label="Save and continue">
+            <span>Save & Continue</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    
+    <article class="preview-card" id="preview-card" aria-label="Proposal preview" aria-live="polite">
+
+      <p class="preview__label">Your Proposal Preview</p>
+
+      <h2 class="preview__from-to">
+        From <span id="preview-from">—</span> to <span id="preview-to">—</span>
+      </h2>
+
+      <div class="preview__divider" aria-hidden="true"></div>
+
+      <p class="preview__message" id="preview-msg"></p>
+
+      <div class="preview__actions">
+        <button class="btn-edit" id="btn-edit" aria-label="Edit your proposal">
+          Edit Proposal
+        </button>
+        <a href="upload-memories.html" class="btn-continue" id="btn-continue" aria-label="Continue to upload memories">
+          <span>Upload Memories</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </article>
+
+  </main>
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/services/local-storage.js"></script>
+  <script src="assets/js/creator-flow.js"></script>
+  <script src="assets/js/forms/user-details-form.js"></script>
+
+</body>
+</html>

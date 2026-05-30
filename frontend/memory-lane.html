@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Walk through our memories — Forever Yours." />
+  <title>Our Story — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/memory-lane.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="memory-page__bg" aria-hidden="true"></div>
+
+  
+  <a href="index.html" class="memory-logo" aria-label="Forever Yours Home">
+    Forever <span>Yours</span>
+  </a>
+
+  
+  <div class="slide-counter" id="slide-counter" aria-live="polite">
+    <span class="slide-counter__current" id="counter-current">1</span>
+    <span> / </span>
+    <span id="counter-total">1</span>
+  </div>
+
+  
+  <div class="intro-sweep" id="intro-sweep" aria-hidden="true"></div>
+
+  <div class="intro-from" id="intro-from" aria-live="polite">
+    <p class="intro-from__text">
+      From <span id="intro-sender"></span>, with love
+    </p>
+  </div>
+
+  <div class="swipe-hint" id="swipe-hint" aria-hidden="true">
+    <span>‹</span>
+    Swipe to walk through our story
+    <span>›</span>
+  </div>
+
+  
+  <main class="memory-page" id="memory-page"
+        role="region" aria-label="Memory lane">
+
+    <div class="memory-content" id="memory-content">
+
+      
+      <div class="polaroid-wrap" id="polaroid-wrap" aria-label="Memory photo">
+        <div class="polaroid">
+          <div class="polaroid__photo">
+            <img id="polaroid-img" src="" alt="A memory" />
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="final-card" id="final-card">
+        <div class="final-ornament" aria-hidden="true">
+          <span class="final-ornament-line"></span>
+          <span class="final-ornament-diamond"></span>
+          <span class="final-ornament-line"></span>
+        </div>
+        <p class="final-title">And through all of it…</p>
+        <a href="#" class="btn-to-reveal" id="btn-to-reveal"
+           aria-label="Continue to the love reveal">
+          <span>There's something I need to tell you →</span>
+        </a>
+      </div>
+
+      
+      <div class="fallback-card" id="fallback-card" style="display:none">
+        <span class="fallback-icon" aria-hidden="true">💛</span>
+        <p class="fallback-title">Every moment with you</p>
+        <p class="fallback-sub">
+          No photos were needed to capture how you make me feel.
+          Some things live beyond pictures.
+        </p>
+        <a href="#" class="btn-to-reveal" id="btn-fallback-reveal"
+           aria-label="Continue to the reveal">
+          <span>There's something I need to tell you →</span>
+        </a>
+      </div>
+
+      
+      <div class="nav-row" id="nav-row">
+        <button class="nav-arrow" id="btn-prev" aria-label="Previous memory">‹</button>
+        <div class="dot-track" id="dot-track" role="tablist"
+             aria-label="Memory navigation"></div>
+        <button class="nav-arrow" id="btn-next" aria-label="Next memory">›</button>
+      </div>
+
+    </div>
+  </main>
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/timeline/relationship-timeline.js"></script>
+
+</body>
+</html>

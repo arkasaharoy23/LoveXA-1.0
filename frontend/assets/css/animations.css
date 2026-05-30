@@ -1,0 +1,109 @@
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+
+.page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader__ring {
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loader__text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  animation: breathe 1.8s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s var(--ease-out),
+              transform 0.9s var(--ease-out);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out),
+              transform 0.7s var(--ease-out);
+}
+
+.stagger-children.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+.stagger-children.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.12s; }
+.stagger-children.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.24s; }
+.stagger-children.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.36s; }
+.stagger-children.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:0.48s; }
+
+
+@keyframes goldShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--gold-dim) 0%,
+    var(--gold-light) 40%,
+    var(--champagne) 50%,
+    var(--gold-light) 60%,
+    var(--gold-dim) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 4s linear infinite;
+}
+
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.float { animation: float 4s ease-in-out infinite; }
+
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 15px var(--gold-glow); }
+  50%       { box-shadow: 0 0 40px rgba(201,168,76,0.4); }
+}

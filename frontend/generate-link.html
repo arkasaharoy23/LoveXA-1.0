@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Your proposal is ready to share — Forever Yours." />
+  <title>Your Proposal is Ready — Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/generate-link.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <div class="genlink-page__bloom" aria-hidden="true"></div>
+
+  
+  <header class="navbar--minimal" role="banner">
+    <a href="index.html" class="navbar__logo" aria-label="Forever Yours Home">
+      Forever <span>Yours</span>
+    </a>
+  </header>
+
+
+  
+  <main class="genlink-page" id="main-content">
+    <div class="container">
+
+
+      
+      <header class="genlink-header">
+
+        <div class="genlink-header__badge" id="genlink-badge" aria-hidden="true">
+          <span class="genlink-header__badge-dot"></span>
+          Proposal Complete
+          <span class="genlink-header__badge-dot"></span>
+        </div>
+
+        <h1 class="genlink-header__title" id="genlink-title">
+          Your proposal is<br /><em>ready</em>
+        </h1>
+
+        <p class="genlink-header__sub" id="genlink-sub">
+          Share this link when the moment is right — she'll know something beautiful awaits
+        </p>
+
+      </header>
+
+
+      
+      <div class="privacy-notice" id="privacy-notice" role="note">
+        <span class="privacy-notice__icon" aria-hidden="true">🔒</span>
+        <div class="privacy-notice__body">
+          <strong>Privacy &amp; expiry</strong>
+          <p>
+            This link is valid for <strong>24 hours</strong> from when you set your passcode.
+            After that, your proposal, all uploaded photos, and bouquet details are
+            <strong>permanently deleted</strong> from our servers — we do not keep copies.
+          </p>
+          <p class="privacy-notice__expires" id="privacy-expires-at" hidden></p>
+        </div>
+      </div>
+
+
+      
+      <div class="link-card" id="link-card" aria-label="Shareable link">
+
+        <span class="link-card__label">Your Shareable Link</span>
+
+        <div class="link-card__url" id="link-url" aria-live="polite"
+             aria-label="Proposal link"></div>
+
+        <button class="btn-copy" id="btn-copy"
+                style="opacity:0; transition: opacity 0.4s;"
+                aria-label="Copy link to clipboard">
+          <span>Copy Link</span>
+        </button>
+
+      </div>
+
+
+      
+      <div class="share-row" id="share-row" aria-label="Share options">
+
+        <span class="share-label">Share via</span>
+
+        <button class="btn-share btn-share--whatsapp" id="btn-whatsapp"
+                aria-label="Share on WhatsApp">
+          💬 WhatsApp
+        </button>
+
+        <button class="btn-share btn-share--email" id="btn-email"
+                aria-label="Share via email">
+          ✉ Email
+        </button>
+
+        <button class="btn-share btn-share--qr" id="btn-qr"
+                aria-label="Show QR code" aria-expanded="false">
+          ◈ QR Code
+        </button>
+
+      </div>
+
+
+      
+      <div class="qr-wrap" id="qr-wrap" aria-label="QR code for the proposal link">
+        <div id="qr-container"></div>
+        <p class="qr-caption">She can scan this too</p>
+      </div>
+
+
+      
+      <div class="summary-card" id="summary-card" aria-label="Proposal summary">
+
+        <span class="summary-card__title">Proposal Summary</span>
+
+        
+        <div class="summary-names">
+          <span class="summary-name" id="summary-from">—</span>
+          <span class="summary-arrow">→</span>
+          <span class="summary-name" id="summary-to">—</span>
+        </div>
+
+        <div class="summary-divider" aria-hidden="true"></div>
+
+        
+        <span class="summary-message-label">Your Message</span>
+        <p class="summary-message" id="summary-msg">
+          Loading your message…
+        </p>
+
+        <div class="summary-divider" aria-hidden="true"></div>
+
+        
+        <span class="summary-message-label">Bouquet</span>
+        <div class="summary-bouquet" id="summary-bouquet"
+             aria-label="Bouquet summary">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">
+            Loading bouquet…
+          </span>
+        </div>
+
+        
+        <div class="summary-passcode">
+          <div>
+            <span class="summary-passcode__label">Secret Passcode</span><br />
+            <span class="summary-passcode__reminder">
+              Don't forget to share your passcode with her separately
+            </span>
+          </div>
+          <span class="summary-passcode__dots" aria-label="Hidden passcode">
+            ● ● ● ●
+          </span>
+        </div>
+
+      </div>
+
+
+      
+      <div class="genlink-footer" id="genlink-footer">
+        <p class="genlink-footer__text">
+          Want to create another proposal?
+        </p>
+        <a href="create-proposal.html" class="btn-new-proposal"
+           aria-label="Start a new proposal">
+          Start a new proposal →
+        </a>
+      </div>
+
+
+    </div>
+  </main>
+
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/services/local-storage.js"></script>
+  <script src="assets/js/creator-flow.js"></script>
+  <script src="assets/js/bouquet/bouquet-storage.js"></script>
+  <script src="assets/js/generate-link.js"></script>
+
+</body>
+</html>

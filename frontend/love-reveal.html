@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="A message for you — Forever Yours." />
+  <title>Forever Yours</title>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400&display=swap" rel="stylesheet" />
+
+  
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <link rel="stylesheet" href="assets/css/love-reveal.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  
+  <div class="page-loader" role="status" aria-label="Loading">
+    <div class="loader__ring"></div>
+    <p class="loader__text">Forever Yours</p>
+  </div>
+
+  
+  <audio id="bg-music" preload="auto" aria-hidden="true">
+    <source src="assets/music/love1.mp3" type="audio/mpeg" />
+  </audio>
+
+ 
+  <div class="tap-to-start hidden" id="tap-to-start"
+       role="button" tabindex="0" aria-label="Tap to begin">
+    <span class="tap-to-start__icon" aria-hidden="true">♥</span>
+    <p class="tap-to-start__text">Tap anywhere to begin</p>
+    <p class="tap-to-start__sub">A message is waiting for you</p>
+  </div>
+
+  
+  <div class="reveal-page" id="reveal-page">
+
+    
+    <div class="reveal-page__bg" aria-hidden="true"></div>
+
+    
+    <canvas id="heartsCanvas" aria-hidden="true"></canvas>
+
+    
+    <div class="reveal-stage" aria-live="polite" aria-label="Love reveal">
+
+      
+      <p class="love-text" id="love-text" aria-live="assertive">
+        I Love You
+      </p>
+
+    </div>
+
+  </div>
+
+  
+  <p class="language-label" id="language-label" aria-hidden="true">
+    English
+  </p>
+
+
+  
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/utils/language-data.js"></script>
+  <script src="assets/js/proposal/floating-hearts.js"></script>
+  <script src="assets/js/proposal/love-animation.js"></script>
+
+</body>
+</html>
