@@ -65,6 +65,7 @@
       pass1.maxLength = 6;
       pass1.addEventListener('input', () => {
         pass1.value = pass1.value.replace(/\D/g, '').slice(0, 6);
+        updateMatch();
       });
     }
 
@@ -72,6 +73,7 @@
       pass2.maxLength = 6;
       pass2.addEventListener('input', () => {
         pass2.value = pass2.value.replace(/\D/g, '').slice(0, 6);
+        updateMatch();
       });
     }
 
@@ -84,17 +86,18 @@
 
     function updateMatch() {
       if (!matchEl || !pass2) return;
+      const p1 = pass1 ? pass1.value : '';
       const p2 = pass2.value;
 
-      if (p2.length === 0) {
+      if (p1.length === 0 && p2.length === 0) {
         matchEl.className = 'creator-match';
         matchEl.textContent = '';
-        if (pass2) pass2.classList.remove('match', 'mismatch');
+        pass2.classList.remove('match', 'mismatch');
         if (btnSet) btnSet.disabled = true;
         return;
       }
 
-      if (pass1 && pass1.value.length > 0 && pass1.value.length < 6) {
+      if (p1.length > 0 && p1.length < 6) {
         matchEl.className = 'creator-match show fail';
         matchEl.textContent = '✦ Passcode must be exactly 6 digits';
         pass2.classList.remove('match');
@@ -105,9 +108,17 @@
 
       if (p2.length > 0 && p2.length < 6) {
         matchEl.className = 'creator-match show fail';
-        matchEl.textContent = '✦ Passcode must be exactly 6 digits';
+        matchEl.textContent = '✦ Confirm passcode must be exactly 6 digits';
         pass2.classList.remove('match');
         pass2.classList.add('mismatch');
+        if (btnSet) btnSet.disabled = true;
+        return;
+      }
+
+      if (p2.length === 0) {
+        matchEl.className = 'creator-match';
+        matchEl.textContent = '';
+        pass2.classList.remove('match', 'mismatch');
         if (btnSet) btnSet.disabled = true;
         return;
       }
@@ -119,9 +130,6 @@
       pass2.classList.toggle('mismatch', !ok);
       if (btnSet) btnSet.disabled = !ok;
     }
-
-    if (pass1) pass1.addEventListener('input', updateMatch);
-    if (pass2) pass2.addEventListener('input', updateMatch);
 
     async function handleSetPasscode() {
       if (!passcodesMatch()) {
@@ -208,6 +216,12 @@
     return /^\d$/.test(value);
   }
 
+  function syncFromDigits() {
+    if (hiddenInput) {
+      hiddenInput.value = digits.join('');
+    }
+  }
+
   function renderBoxes() {
     pinBoxes.forEach((box, i) => {
       const val = digits[i];
@@ -232,9 +246,7 @@
       box.classList.toggle('active', i === activeIndex);
     });
 
-    if (hiddenInput) {
-      hiddenInput.value = digits.join('');
-    }
+    syncFromDigits();
 
     if (btnUnlock) {
       btnUnlock.disabled = getPinLength() !== PIN_LENGTH || locked;
@@ -256,7 +268,13 @@
   }
 
   function focusHidden() {
-    if (hiddenInput) hiddenInput.focus();
+    if (hiddenInput) {
+      hiddenInput.focus();
+      try {
+        const len = hiddenInput.value.length;
+        hiddenInput.setSelectionRange(len, len);
+      } catch (e) {}
+    }
   }
 
   if (pinBoxesWrap) {
@@ -283,17 +301,18 @@
       if (locked) return;
 
       if (isDigit(e.key)) {
+        e.preventDefault();
         if (getPinLength() < PIN_LENGTH) {
           digits[activeIndex] = e.key;
           activeIndex = Math.min(activeIndex + 1, PIN_LENGTH - 1);
           setError('');
+          renderBoxes();
         }
-        e.preventDefault();
-        renderBoxes();
         return;
       }
 
       if (e.key === 'Backspace') {
+        e.preventDefault();
         if (digits[activeIndex] !== '') {
           digits[activeIndex] = '';
         } else if (activeIndex > 0) {
@@ -301,7 +320,6 @@
           digits[activeIndex] = '';
         }
         setError('');
-        e.preventDefault();
         renderBoxes();
         return;
       }
@@ -327,22 +345,27 @@
         return;
       }
 
-      if (!/^[0-9]$/.test(e.key) && e.key !== 'Tab') {
+      if (!/^[0-9]$/.test(e.key) && !['Tab', 'ArrowLeft', 'ArrowRight', 'Backspace', 'Delete'].includes(e.key)) {
         e.preventDefault();
       }
     });
 
-    hiddenInput.addEventListener('input', (e) => {
-      const val = (e.target.value || '').replace(/\D/g, '').slice(0, PIN_LENGTH);
+    hiddenInput.addEventListener('input', () => {
+      if (locked) return;
+
+      const raw = hiddenInput.value.replace(/\D/g, '').slice(0, PIN_LENGTH);
+
       digits = Array(PIN_LENGTH).fill('');
-      for (let i = 0; i < val.length; i++) {
-        digits[i] = val[i];
+      for (let i = 0; i < raw.length; i++) {
+        digits[i] = raw[i];
       }
-      activeIndex = Math.min(val.length, PIN_LENGTH - 1);
-      hiddenInput.value = '';
+
+      activeIndex = raw.length >= PIN_LENGTH ? PIN_LENGTH - 1 : Math.max(raw.length, 0);
+
+      hiddenInput.value = raw;
+
       setError('');
       renderBoxes();
-      return;
     });
 
     hiddenInput.addEventListener('paste', (e) => {
@@ -352,11 +375,12 @@
         .getData('text')
         .replace(/\D/g, '')
         .slice(0, PIN_LENGTH);
+
       digits = Array(PIN_LENGTH).fill('');
       for (let i = 0; i < pasted.length; i++) {
         digits[i] = pasted[i];
       }
-      activeIndex = Math.min(pasted.length, PIN_LENGTH - 1);
+      activeIndex = pasted.length >= PIN_LENGTH ? PIN_LENGTH - 1 : Math.max(pasted.length - 1, 0);
       setError('');
       renderBoxes();
     });
@@ -388,7 +412,7 @@
     setError('');
 
     try {
-      const res = await fetch(`${API_BASE}/proposals/${proposalId}/unlock`, {
+      const res = await fetch(`${API_BASE}/proposals/${proposalId}/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ passcode }),
@@ -400,12 +424,46 @@
         throw new Error(data.message || 'Incorrect passcode.');
       }
 
+      sessionStorage.setItem('fy_pass', passcode);
+      sessionStorage.setItem('fy_pid', proposalId);
+
       if (btnUnlock) btnUnlock.classList.remove('loading');
+
+      try {
+        const proposalRes = await fetch(
+          `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
+        );
+        const proposalData = await proposalRes.json();
+
+        if (proposalRes.ok && proposalData.success && proposalData.proposal) {
+          const proposal = proposalData.proposal;
+
+          const photoWrap = document.getElementById('couple-photo-wrap');
+          const photoImg  = document.getElementById('couple-photo-img');
+          const namesEl   = document.getElementById('unlock-names');
+
+          if (proposal.couplePhoto && photoWrap && photoImg) {
+            photoImg.src = proposal.couplePhoto;
+            photoWrap.style.display = '';
+            // Wait for image to load before adding .visible so the CSS transition fires
+            photoImg.onload = () => photoWrap.classList.add('visible');
+            // Fallback: if image is already cached or src is a data URI it may not fire onload
+            if (photoImg.complete) photoWrap.classList.add('visible');
+          }
+
+          if (namesEl && proposal.senderName && proposal.recipientName) {
+            namesEl.textContent = `${proposal.senderName} & ${proposal.recipientName}`;
+            namesEl.style.display = '';
+          }
+        }
+      } catch (e) {}
+
+      // Show the success overlay AFTER the proposal fetch so photo is ready
       if (successEl) successEl.classList.add('show');
 
       setTimeout(() => {
-        window.location.href = `proposal.html?id=${proposalId}`;
-      }, 2000);
+        window.location.href = `memory-lane.html?id=${proposalId}`;
+      }, 3000);
 
     } catch (err) {
       attempts++;
@@ -425,6 +483,7 @@
         setHint(`${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`);
         digits = Array(PIN_LENGTH).fill('');
         activeIndex = 0;
+        if (hiddenInput) hiddenInput.value = '';
         renderBoxes();
         focusHidden();
       }
