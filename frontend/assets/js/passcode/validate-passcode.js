@@ -3,26 +3,26 @@
 
   const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'https://lovexa-1-0.onrender.com/api';
 
-  const params     = new URLSearchParams(window.location.search);
-  const urlId      = params.get('id');
+  const params = new URLSearchParams(window.location.search);
+  const urlId = params.get('id');
   const isRecipient = !!urlId;
-  const isCreator   = !isRecipient;
+  const isCreator = !isRecipient;
 
   function showMode() {
-    const creatorMode    = document.getElementById('creator-mode');
-    const recipientMode  = document.getElementById('recipient-mode');
-    const creatorNav     = document.getElementById('creator-navbar');
-    const recipientNav   = document.getElementById('recipient-navbar');
-    const creatorProgress= document.getElementById('creator-progress');
+    const creatorMode = document.getElementById('creator-mode');
+    const recipientMode = document.getElementById('recipient-mode');
+    const creatorNav = document.getElementById('creator-navbar');
+    const recipientNav = document.getElementById('recipient-navbar');
+    const creatorProgress = document.getElementById('creator-progress');
 
     if (isCreator) {
-      if (creatorMode)    creatorMode.style.display    = '';
-      if (creatorNav)     creatorNav.style.display     = '';
-      if (creatorProgress)creatorProgress.style.display= '';
+      if (creatorMode) creatorMode.style.display = '';
+      if (creatorNav) creatorNav.style.display = '';
+      if (creatorProgress) creatorProgress.style.display = '';
       document.title = 'Set Your Passcode — Forever Yours';
     } else {
-      if (recipientMode) recipientMode.style.display   = '';
-      if (recipientNav)  recipientNav.style.display    = '';
+      if (recipientMode) recipientMode.style.display = '';
+      if (recipientNav) recipientNav.style.display = '';
       document.title = 'Unlock Your Moment — Forever Yours';
     }
   }
@@ -41,19 +41,19 @@
       return;
     }
 
-    const pass1    = document.getElementById('creator-pass1');
-    const pass2    = document.getElementById('creator-pass2');
-    const eye1     = document.getElementById('eye-creator1');
-    const eye2     = document.getElementById('eye-creator2');
-    const matchEl  = document.getElementById('creator-match');
-    const btnSet   = document.getElementById('btn-set-creator');
-    const successEl= document.getElementById('creator-success');
+    const pass1 = document.getElementById('creator-pass1');
+    const pass2 = document.getElementById('creator-pass2');
+    const eye1 = document.getElementById('eye-creator1');
+    const eye2 = document.getElementById('eye-creator2');
+    const matchEl = document.getElementById('creator-match');
+    const btnSet = document.getElementById('btn-set-creator');
+    const successEl = document.getElementById('creator-success');
 
     function toggleEye(btn, input) {
       if (!btn || !input) return;
       btn.addEventListener('click', () => {
-        const show  = input.type === 'password';
-        input.type  = show ? 'text' : 'password';
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
         btn.textContent = show ? '🙈' : '👁';
       });
     }
@@ -61,10 +61,25 @@
     toggleEye(eye1, pass1);
     toggleEye(eye2, pass2);
 
+    if (pass1) {
+      pass1.maxLength = 6;
+      pass1.addEventListener('input', () => {
+        pass1.value = pass1.value.replace(/\D/g, '').slice(0, 6);
+      });
+    }
+
+    if (pass2) {
+      pass2.maxLength = 6;
+      pass2.addEventListener('input', () => {
+        pass2.value = pass2.value.replace(/\D/g, '').slice(0, 6);
+      });
+    }
+
     function passcodesMatch() {
       return pass1 && pass2 &&
-             pass1.value.length >= 4 &&
-             pass1.value === pass2.value;
+        pass1.value.length === 6 &&
+        pass2.value.length === 6 &&
+        pass1.value === pass2.value;
     }
 
     function updateMatch() {
@@ -75,13 +90,32 @@
         matchEl.className = 'creator-match';
         matchEl.textContent = '';
         if (pass2) pass2.classList.remove('match', 'mismatch');
+        if (btnSet) btnSet.disabled = true;
+        return;
+      }
+
+      if (pass1 && pass1.value.length > 0 && pass1.value.length < 6) {
+        matchEl.className = 'creator-match show fail';
+        matchEl.textContent = '✦ Passcode must be exactly 6 digits';
+        pass2.classList.remove('match');
+        pass2.classList.add('mismatch');
+        if (btnSet) btnSet.disabled = true;
+        return;
+      }
+
+      if (p2.length > 0 && p2.length < 6) {
+        matchEl.className = 'creator-match show fail';
+        matchEl.textContent = '✦ Passcode must be exactly 6 digits';
+        pass2.classList.remove('match');
+        pass2.classList.add('mismatch');
+        if (btnSet) btnSet.disabled = true;
         return;
       }
 
       const ok = passcodesMatch();
       matchEl.className = `creator-match show ${ok ? 'match' : 'fail'}`;
       matchEl.textContent = ok ? '✦ Passcodes match' : '✦ Passcodes do not match';
-      pass2.classList.toggle('match',    ok);
+      pass2.classList.toggle('match', ok);
       pass2.classList.toggle('mismatch', !ok);
       if (btnSet) btnSet.disabled = !ok;
     }
@@ -90,16 +124,25 @@
     if (pass2) pass2.addEventListener('input', updateMatch);
 
     async function handleSetPasscode() {
-      if (!passcodesMatch()) return;
+      if (!passcodesMatch()) {
+        if (pass1 && pass1.value.length !== 6) {
+          alert('Passcode must be exactly 6 digits.');
+        } else if (pass2 && pass2.value.length !== 6) {
+          alert('Confirm passcode must be exactly 6 digits.');
+        } else {
+          alert('Passcodes do not match.');
+        }
+        return;
+      }
 
       btnSet.disabled = true;
       btnSet.classList.add('loading');
 
       try {
-        const res  = await fetch(`${API_BASE}/proposals/${proposalId}/passcode`, {
-          method:  'PATCH',
+        const res = await fetch(`${API_BASE}/proposals/${proposalId}/passcode`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ passcode: pass1.value }),
+          body: JSON.stringify({ passcode: pass1.value }),
         });
 
         const data = await res.json();
@@ -140,381 +183,251 @@
 
   const proposalId = urlId;
 
-  const pinBoxes     = Array.from(document.querySelectorAll('.pin-box'));
+  const pinBoxes = Array.from(document.querySelectorAll('.pin-box'));
   const pinBoxesWrap = document.querySelector('.pin-boxes');
-  const hiddenInput  = document.getElementById('pin-hidden-input');
+  const hiddenInput = document.getElementById('pin-hidden-input');
   const toggleReveal = document.getElementById('pin-toggle');
-  const errorEl      = document.getElementById('passcode-error');
-  const hintEl       = document.getElementById('passcode-hint-msg');
-  const btnUnlock    = document.getElementById('btn-unlock');
-  const successEl    = document.getElementById('unlock-success');
+  const errorEl = document.getElementById('passcode-error');
+  const hintEl = document.getElementById('passcode-hint-msg');
+  const btnUnlock = document.getElementById('btn-unlock');
+  const successEl = document.getElementById('unlock-success');
 
-  let digits      = Array(pinBoxes.length).fill('');
+  const PIN_LENGTH = 6;
+
+  let digits = Array(PIN_LENGTH).fill('');
   let activeIndex = 0;
-  let revealed    = false;
-  let attempts    = 0;
-  let locked      = false;
+  let revealed = false;
+  let attempts = 0;
+  let locked = false;
+
+  function getPinLength() {
+    return digits.filter(d => d !== '').length;
+  }
+
+  function isDigit(value) {
+    return /^\d$/.test(value);
+  }
 
   function renderBoxes() {
     pinBoxes.forEach((box, i) => {
-      box.classList.toggle('filled', digits[i] !== '');
+      const val = digits[i];
+      if (revealed) {
+        box.textContent = val || '';
+      } else {
+        box.textContent = val ? '•' : '';
+      }
+      box.classList.toggle('filled', val !== '');
       box.classList.toggle('active', i === activeIndex);
-      const char = box.querySelector('.pin-char');
-      if (char) char.textContent = digits[i] || '';
     });
 
+    if (hiddenInput) {
+      hiddenInput.value = digits.join('');
+    }
+
     if (btnUnlock) {
-      btnUnlock.disabled =
-        digits.filter(d => d !== '').length === 0 || locked;
+      btnUnlock.disabled = getPinLength() !== PIN_LENGTH || locked;
     }
   }
 
-  function getPasscode() {
-    return digits.filter(d => d !== '').join('');
+  function setError(msg) {
+    if (errorEl) {
+      errorEl.textContent = msg;
+      errorEl.style.display = msg ? '' : 'none';
+    }
   }
 
-  function focusInput() {
-    if (!hiddenInput) return;
-
-    hiddenInput.style.pointerEvents = 'all';
-    hiddenInput.focus();
-    hiddenInput.click();
-
-    setTimeout(() => {
-      hiddenInput.style.pointerEvents = 'none';
-    }, 100);
+  function setHint(msg) {
+    if (hintEl) {
+      hintEl.textContent = msg;
+      hintEl.style.display = msg ? '' : 'none';
+    }
   }
 
-  let keydownHandled = false;
+  function focusHidden() {
+    if (hiddenInput) hiddenInput.focus();
+  }
 
-  function handleKey(e) {
-    if (locked) return;
-
-    const key = e.key;
-
-    if (key === 'Backspace') {
-      e.preventDefault();
-      keydownHandled = true;
-
-      if (digits[activeIndex] !== '') {
-        digits[activeIndex] = '';
-      } else if (activeIndex > 0) {
-        activeIndex--;
-        digits[activeIndex] = '';
-      }
-
-      clearError();
-      renderBoxes();
-      return;
-    }
-
-    if (key === 'Enter') {
-      e.preventDefault();
-      keydownHandled = true;
-
-      if (getPasscode().length > 0) handleUnlock();
-      return;
-    }
-
-    if (key.length === 1 && activeIndex < pinBoxes.length) {
-      keydownHandled = true;
-
-      digits[activeIndex] = key;
-
-      if (activeIndex < pinBoxes.length - 1) {
-        activeIndex++;
-      }
-
-      clearError();
-      renderBoxes();
-    }
+  if (pinBoxesWrap) {
+    pinBoxesWrap.addEventListener('click', () => {
+      focusHidden();
+    });
   }
 
   pinBoxes.forEach((box, i) => {
-    box.addEventListener('click', () => {
-      const firstEmpty = digits.findIndex(d => d === '');
-
-      activeIndex =
-        firstEmpty === -1
-          ? pinBoxes.length - 1
-          : Math.min(i, firstEmpty);
-
+    box.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activeIndex = Math.min(i, getPinLength());
       renderBoxes();
-      focusInput();
+      focusHidden();
     });
   });
 
   if (hiddenInput) {
+    hiddenInput.setAttribute('maxlength', PIN_LENGTH);
+    hiddenInput.setAttribute('inputmode', 'numeric');
+    hiddenInput.setAttribute('pattern', '[0-9]*');
 
-    hiddenInput.addEventListener('keydown', handleKey);
+    hiddenInput.addEventListener('keydown', (e) => {
+      if (locked) return;
 
-    hiddenInput.addEventListener('input', () => {
-
-      if (keydownHandled) {
-        keydownHandled = false;
-        hiddenInput.value = '';
-        return;
-      }
-
-      if (locked) {
-        hiddenInput.value = '';
-        return;
-      }
-
-      const val = hiddenInput.value;
-      hiddenInput.value = '';
-
-      if (!val) return;
-
-      for (const ch of val) {
-        if (activeIndex < pinBoxes.length) {
-          digits[activeIndex] = ch;
-
-          if (activeIndex < pinBoxes.length - 1) {
-            activeIndex++;
-          }
+      if (isDigit(e.key)) {
+        if (getPinLength() < PIN_LENGTH) {
+          digits[activeIndex] = e.key;
+          activeIndex = Math.min(activeIndex + 1, PIN_LENGTH - 1);
+          setError('');
         }
+        e.preventDefault();
+        renderBoxes();
+        return;
       }
 
-      clearError();
-      renderBoxes();
-    });
-
-    hiddenInput.addEventListener('input', (e) => {
-
-      if (
-        e.inputType === 'deleteContentBackward' &&
-        !keydownHandled
-      ) {
-
+      if (e.key === 'Backspace') {
         if (digits[activeIndex] !== '') {
           digits[activeIndex] = '';
         } else if (activeIndex > 0) {
           activeIndex--;
           digits[activeIndex] = '';
         }
-
-        hiddenInput.value = '';
-        clearError();
+        setError('');
+        e.preventDefault();
         renderBoxes();
+        return;
       }
+
+      if (e.key === 'ArrowLeft' && activeIndex > 0) {
+        activeIndex--;
+        renderBoxes();
+        return;
+      }
+
+      if (e.key === 'ArrowRight' && activeIndex < PIN_LENGTH - 1) {
+        activeIndex++;
+        renderBoxes();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        if (getPinLength() === PIN_LENGTH) {
+          handleUnlock();
+        } else {
+          setError('Please enter all 6 digits.');
+        }
+        return;
+      }
+
+      if (!/^[0-9]$/.test(e.key) && e.key !== 'Tab') {
+        e.preventDefault();
+      }
+    });
+
+    hiddenInput.addEventListener('input', (e) => {
+      const val = (e.target.value || '').replace(/\D/g, '').slice(0, PIN_LENGTH);
+      digits = Array(PIN_LENGTH).fill('');
+      for (let i = 0; i < val.length; i++) {
+        digits[i] = val[i];
+      }
+      activeIndex = Math.min(val.length, PIN_LENGTH - 1);
+      hiddenInput.value = '';
+      setError('');
+      renderBoxes();
+    });
+
+    hiddenInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      if (locked) return;
+      const pasted = (e.clipboardData || window.clipboardData)
+        .getData('text')
+        .replace(/\D/g, '')
+        .slice(0, PIN_LENGTH);
+      digits = Array(PIN_LENGTH).fill('');
+      for (let i = 0; i < pasted.length; i++) {
+        digits[i] = pasted[i];
+      }
+      activeIndex = Math.min(pasted.length, PIN_LENGTH - 1);
+      setError('');
+      renderBoxes();
     });
   }
 
   if (toggleReveal) {
     toggleReveal.addEventListener('click', () => {
       revealed = !revealed;
-
-      if (pinBoxesWrap) {
-        pinBoxesWrap.classList.toggle('reveal', revealed);
-      }
-
-      const label = toggleReveal.querySelector('span');
-
-      if (label) {
-        label.textContent = revealed
-          ? 'Hide passcode'
-          : 'Show passcode';
-      }
+      toggleReveal.textContent = revealed ? '🙈' : '👁';
+      renderBoxes();
     });
-  }
-
-  function showError(msg) {
-    if (errorEl) {
-      errorEl.textContent = msg;
-      errorEl.classList.add('show');
-    }
-  }
-
-  function clearError() {
-    if (errorEl) errorEl.classList.remove('show');
-  }
-
-  function shakeBoxes() {
-    pinBoxes.forEach(box => {
-      box.classList.remove('error');
-      void box.offsetWidth;
-      box.classList.add('error');
-    });
-
-    setTimeout(() => {
-      pinBoxes.forEach(box => box.classList.remove('error'));
-    }, 600);
-  }
-
-  function resetPIN() {
-    digits = Array(pinBoxes.length).fill('');
-    activeIndex = 0;
-    renderBoxes();
-    focusInput();
-  }
-
-  function maybeShowHint() {
-    if (attempts >= 2 && hintEl) {
-      hintEl.classList.add('show');
-    }
   }
 
   async function handleUnlock() {
     if (locked) return;
 
-    const passcode = getPasscode();
+    if (getPinLength() !== PIN_LENGTH) {
+      setError('Please enter all 6 digits.');
+      return;
+    }
 
-    if (!passcode) return;
+    const passcode = digits.join('');
 
     if (btnUnlock) {
-      btnUnlock.classList.add('loading');
       btnUnlock.disabled = true;
+      btnUnlock.classList.add('loading');
     }
+    setError('');
 
     try {
-      const res = await fetch(
-        `${API_BASE}/proposals/${proposalId}/verify`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ passcode }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/proposals/${proposalId}/unlock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode }),
+      });
 
       const data = await res.json();
 
-      if (res.ok && data.success && data.valid) {
-
-        onSuccess(passcode);
-
-      } else {
-
-        if (btnUnlock) {
-          btnUnlock.classList.remove('loading');
-          btnUnlock.disabled = false;
-        }
-
-        attempts++;
-        shakeBoxes();
-        showError('Incorrect passcode. Please try again.');
-        maybeShowHint();
-
-        setTimeout(resetPIN, 650);
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Incorrect passcode.');
       }
 
+      if (btnUnlock) btnUnlock.classList.remove('loading');
+      if (successEl) successEl.classList.add('show');
+
+      setTimeout(() => {
+        window.location.href = `proposal.html?id=${proposalId}`;
+      }, 2000);
+
     } catch (err) {
-
-      console.error('[Recipient] Verify error:', err);
-
+      attempts++;
       if (btnUnlock) {
-        btnUnlock.classList.remove('loading');
         btnUnlock.disabled = false;
+        btnUnlock.classList.remove('loading');
       }
 
-      showError(
-        'Connection error. Please check your connection and try again.'
-      );
-    }
-  }
-
-  async function onSuccess(passcode) {
-
-    try {
-      sessionStorage.setItem('fy_pid',  proposalId);
-      sessionStorage.setItem('fy_pass', passcode);
-    } catch {}
-
-    if (successEl) {
-      successEl.classList.add('show');
-    }
-
-    try {
-      const res = await fetch(
-        `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-      );
-
-      const data = await res.json();
-
-      if (res.ok && data.success && data.proposal) {
-
-        const {
-          couplePhoto,
-          senderName,
-          recipientName
-        } = data.proposal;
-
-        const photoWrap = document.getElementById('couple-photo-wrap');
-        const photoImg  = document.getElementById('couple-photo-img');
-        const namesEl   = document.getElementById('unlock-names');
-
-        if (couplePhoto && photoWrap && photoImg) {
-          photoImg.src = couplePhoto;
-          photoWrap.style.display = '';
-
-          setTimeout(() => {
-            photoWrap.classList.add('visible');
-          }, 300);
-        }
-
-        if (namesEl && senderName && recipientName) {
-          namesEl.innerHTML =
-            `<span>${senderName}</span> &amp; <span>${recipientName}</span>`;
-
-          namesEl.style.display = '';
-        }
+      if (attempts >= 5) {
+        locked = true;
+        setError('Too many attempts. Please try again later.');
+        setHint('');
+        if (btnUnlock) btnUnlock.disabled = true;
+      } else {
+        setError(err.message || 'Incorrect passcode. Please try again.');
+        const remaining = 5 - attempts;
+        setHint(`${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`);
+        digits = Array(PIN_LENGTH).fill('');
+        activeIndex = 0;
+        renderBoxes();
+        focusHidden();
       }
-
-    } catch (err) {
-
-      console.warn(
-        '[Passcode] Could not fetch couple photo:',
-        err
-      );
     }
-
-    setTimeout(() => {
-      window.location.href =
-        `memory-lane.html?id=${encodeURIComponent(proposalId)}`;
-    }, 3200);
   }
 
   if (btnUnlock) {
-    btnUnlock.addEventListener('click', handleUnlock);
+    btnUnlock.addEventListener('click', () => {
+      if (getPinLength() !== PIN_LENGTH) {
+        setError('Please enter all 6 digits.');
+        return;
+      }
+      handleUnlock();
+    });
   }
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.navbar--minimal')) {
-      focusInput();
-    }
-  });
-
-  (function spawnParticles() {
-
-    const container =
-      document.querySelector('.passcode-page__particles');
-
-    if (!container) return;
-
-    for (let i = 0; i < 12; i++) {
-
-      const p = document.createElement('div');
-      p.className = 'particle';
-
-      const size = 40 + Math.random() * 120;
-
-      p.style.cssText = `
-        width:${size}px;
-        height:${size}px;
-        left:${Math.random() * 100}%;
-        animation-duration:${12 + Math.random() * 18}s;
-        animation-delay:${Math.random() * 15}s;
-      `;
-
-      container.appendChild(p);
-    }
-
-  })();
-
   renderBoxes();
-
-  setTimeout(focusInput, 1600);
+  setTimeout(focusHidden, 500);
 
 })();

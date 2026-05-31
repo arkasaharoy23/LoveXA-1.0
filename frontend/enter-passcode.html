@@ -71,7 +71,7 @@
       </h1>
 
       <p class="creator-card__sub">
-        Create a secret passcode — your recipient will need this to unlock
+        Create a 6-digit secret passcode — your recipient will need this to unlock
         everything you've crafted for them
       </p>
 
@@ -84,12 +84,15 @@
               type="password"
               id="creator-pass1"
               class="creator-input"
-              placeholder="········"
+              placeholder="······"
               autocomplete="new-password"
-              minlength="4"
-              maxlength="32"
-              aria-label="Create passcode"
+              minlength="6"
+              maxlength="6"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              aria-label="Create 6-digit passcode"
               aria-required="true"
+              aria-describedby="creator-match"
             />
             <span class="creator-underline" aria-hidden="true"></span>
             <button class="creator-eye" id="eye-creator1"
@@ -104,12 +107,15 @@
               type="password"
               id="creator-pass2"
               class="creator-input"
-              placeholder="········"
+              placeholder="······"
               autocomplete="new-password"
-              minlength="4"
-              maxlength="32"
-              aria-label="Confirm passcode"
+              minlength="6"
+              maxlength="6"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              aria-label="Confirm 6-digit passcode"
               aria-required="true"
+              aria-describedby="creator-match"
             />
             <span class="creator-underline" aria-hidden="true"></span>
             <button class="creator-eye" id="eye-creator2"
@@ -160,18 +166,20 @@
         Something beautiful is waiting inside
       </p>
 
-      <div class="pin-wrap" role="group" aria-label="Passcode entry">
+      <div class="pin-wrap" role="group" aria-label="6-digit passcode entry">
 
         <input
           type="text"
           id="pin-hidden-input"
           class="pin-hidden-input"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="6"
           autocomplete="off"
           autocorrect="off"
           autocapitalize="off"
-          autocomplete="off"
           spellcheck="false"
-          aria-label="Enter passcode"
+          aria-label="Enter 6-digit passcode"
           aria-describedby="passcode-error passcode-hint-msg"
           style="opacity:0;position:absolute;width:1px;height:1px;top:0;left:0;"
         />
