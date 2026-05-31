@@ -1,4 +1,3 @@
-
 .passcode-page {
   min-height: 100vh;
   display: flex;
@@ -8,7 +7,6 @@
   overflow: hidden;
   padding: 40px 20px;
 }
-
 
 .passcode-page__bg {
   position: fixed;
@@ -20,7 +18,6 @@
     radial-gradient(ellipse 40% 40% at 50% 50%, rgba(180,60,60,0.03) 0%, transparent 70%),
     linear-gradient(160deg, #0c0806 0%, #0a0a0a 45%, #0b0a08 100%);
 }
-
 
 .passcode-page__particles {
   position: fixed;
@@ -45,7 +42,6 @@
   100% { transform: translateY(-20vh) scale(1); opacity: 0; }
 }
 
-
 .passcode-page::before,
 .passcode-page::after {
   content: '';
@@ -56,10 +52,9 @@
   z-index: 1;
   pointer-events: none;
 }
+
 .passcode-page::before { top: 0; }
 .passcode-page::after  { bottom: 0; }
-
-
 
 .navbar--minimal {
   position: fixed;
@@ -79,8 +74,6 @@
   border-bottom: 1px solid rgba(201,168,76,0.2);
 }
 
-
-
 .passcode-card {
   position: relative;
   z-index: 2;
@@ -91,7 +84,6 @@
   align-items: center;
   text-align: center;
 }
-
 
 .passcode-card__seal {
   width: 72px;
@@ -122,7 +114,6 @@
   font-size: 1.8rem;
   line-height: 1;
 }
-
 
 .passcode-card__intro {
   font-family: var(--font-body);
@@ -175,8 +166,6 @@
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-
 
 .pin-wrap {
   opacity: 0;
@@ -231,7 +220,6 @@
   90%     { transform: translateX(4px); }
 }
 
-
 .pin-box.active::after {
   content: '';
   position: absolute;
@@ -248,7 +236,6 @@
   50%      { opacity: 0; }
 }
 
-
 .pin-dot {
   width: 10px;
   height: 10px;
@@ -264,7 +251,6 @@
   transform: scale(1);
 }
 
-
 .pin-char {
   font-family: var(--font-body);
   font-size: 1.4rem;
@@ -278,16 +264,24 @@
 .pin-boxes.reveal .pin-dot  { display: none; }
 .pin-boxes.reveal .pin-char { display: block; }
 
-
 .pin-hidden-input {
-  position: absolute;
+  position: fixed;
   opacity: 0;
-  pointer-events: none;
   width: 1px;
   height: 1px;
-  top: 0; left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: 16px;
+  -webkit-user-select: text;
+  user-select: text;
 }
-
 
 .pin-toggle-row {
   display: flex;
@@ -308,8 +302,6 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
-
-
 
 .passcode-error {
   font-family: var(--font-body);
@@ -337,8 +329,6 @@
 }
 
 .passcode-hint-msg.show { opacity: 1; }
-
-
 
 .btn-unlock {
   font-family: var(--font-body);
@@ -382,8 +372,8 @@
   transform: none;
 }
 
-
 .btn-unlock.loading span { opacity: 0; }
+
 .btn-unlock.loading::after {
   content: '';
   position: absolute;
@@ -396,9 +386,9 @@
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
-
-
+@keyframes spin {
+  to { transform: translate(-50%,-50%) rotate(360deg); }
+}
 
 .unlock-success {
   position: fixed;
@@ -449,18 +439,12 @@
   to   { transform: scale(1); opacity: 1; }
 }
 
-
-
 @media (max-width: 480px) {
   .pin-box  { width: 48px; height: 58px; }
   .pin-boxes { gap: 10px; }
   .btn-unlock { padding: 16px 36px; }
   .passcode-card__title { font-size: 1.8rem; }
 }
-
-
-
-
 
 .creator-page {
   min-height: 100vh;
@@ -471,7 +455,6 @@
   overflow: hidden;
   padding: 120px 20px 60px;
 }
-
 
 .creator-card {
   position: relative;
@@ -555,7 +538,6 @@
   animation: fadeUp 0.9s var(--ease-out) 0.65s forwards;
 }
 
-
 .creator-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -605,9 +587,8 @@
 }
 
 .creator-input:focus { border-bottom-color: var(--gold); }
-.creator-input.match    { border-bottom-color: var(--gold); }
+.creator-input.match { border-bottom-color: var(--gold); }
 .creator-input.mismatch { border-bottom-color: #c0504a; }
-
 
 .creator-underline {
   position: absolute;
@@ -621,7 +602,6 @@
 }
 
 .creator-input:focus ~ .creator-underline { width: 100%; }
-
 
 .creator-eye {
   position: absolute;
@@ -640,7 +620,6 @@
 
 .creator-eye:hover { color: var(--gold); }
 
-
 .creator-match {
   font-size: 0.65rem;
   letter-spacing: 0.2em;
@@ -653,10 +632,9 @@
   text-align: center;
 }
 
-.creator-match.show  { opacity: 1; }
+.creator-match.show { opacity: 1; }
 .creator-match.match { color: var(--gold); }
-.creator-match.fail  { color: #c0504a; }
-
+.creator-match.fail { color: #c0504a; }
 
 .btn-set-creator {
   font-family: var(--font-body);
@@ -699,8 +677,8 @@
   transform: none;
 }
 
-
 .btn-set-creator.loading span { opacity: 0; }
+
 .btn-set-creator.loading::after {
   content: '';
   position: absolute;
@@ -712,7 +690,6 @@
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-
 
 .creator-success {
   position: fixed;
@@ -768,7 +745,6 @@
   animation: fadeUp 0.7s var(--ease-out) 0.7s forwards;
 }
 
-
 @media (max-width: 600px) {
   .creator-inputs {
     grid-template-columns: 1fr;
@@ -777,8 +753,6 @@
 
   .creator-card__title { font-size: 1.9rem; }
 }
-
-
 
 .unlock-success__photo-wrap {
   position: relative;
@@ -804,7 +778,6 @@
   display: block;
 }
 
-
 .unlock-success__photo-wrap::before,
 .unlock-success__photo-wrap::after {
   content: '';
@@ -826,7 +799,6 @@
   border-right: 2px solid var(--gold);
 }
 
-
 .unlock-success__names {
   font-family: var(--font-display);
   font-size: 1rem;
@@ -838,4 +810,6 @@
   animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
 }
 
-.unlock-success__names span { color: var(--gold-light); }
+.unlock-success__names span {
+  color: var(--gold-light);
+}

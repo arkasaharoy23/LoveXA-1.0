@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'https://lovexa-1-0.onrender.com/api';
 
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
@@ -23,6 +23,7 @@
   const ornamentEl  = document.getElementById('success-ornament');
   const actionsEl   = document.getElementById('success-actions');
   const btnShare    = document.getElementById('btn-share-success');
+  const btnNew      = document.getElementById('btn-new-success');
 
   let W = window.innerWidth;
   let H = window.innerHeight;
@@ -83,6 +84,7 @@
         ctx.arc(pt.x, pt.y, this.size * 0.4, 0, Math.PI * 2);
         ctx.fill();
       });
+
       ctx.globalAlpha = this.alpha;
       ctx.fillStyle   = this.color;
       ctx.beginPath();
@@ -299,95 +301,97 @@
         day: 'numeric', month: 'long', year: 'numeric'
       });
     }
-
-  }
-
-  function getSharePhotoData() {
-    const sender    = senderEl?.textContent?.trim()    || '';
-    const recipient = recipientEl?.textContent?.trim() || '';
-    const names     = sender && recipient
-      ? `${sender}  ♥  ${recipient}`
-      : (namesEl?.textContent?.trim() || '');
-
-    return {
-      yes:   yesText?.textContent?.trim()  || 'Yes!',
-      label: labelEl?.textContent?.trim()   || 'She Said Yes',
-      names,
-      date:  dateEl?.textContent?.trim()   || '',
-    };
   }
 
   function setShareState(loading) {
     if (!btnShare) return;
     const span = btnShare.querySelector('span');
     btnShare.disabled = loading;
-    if (span) span.textContent = loading ? 'Creating photo…' : 'Share Moment';
-  }
-
-  function downloadBlob(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a   = document.createElement('a');
-    a.href     = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  async function captureSharePhoto() {
-    if (!window.SharePhotoRenderer) {
-      throw new Error('Share photo renderer is not available.');
-    }
-    return window.SharePhotoRenderer.renderSharePhoto(getSharePhotoData());
+    if (span) span.textContent = loading ? 'Capturing…' : 'Share Moment';
   }
 
   async function captureAndShare() {
-    const canvas = await captureSharePhoto();
-    const shareText = 'She said YES! Our forever starts today. 💛';
+    const toHide = [
+      document.getElementById('fireworksCanvas'),
+      document.getElementById('confettiCanvas'),
+      document.getElementById('heartsCanvas'),
+      document.getElementById('success-actions'),
+      document.getElementById('tap-to-start'),
+    ];
 
-    const blob = await new Promise((resolve, reject) => {
-      canvas.toBlob(b => (b ? resolve(b) : reject(new Error('Could not create image.'))), 'image/png', 1);
-    });
+    toHide.forEach(el => { if (el) el.style.visibility = 'hidden'; });
 
-    const file = new File([blob], 'forever-yours-yes.png', { type: 'image/png' });
+    let canvas;
+    try {
+      canvas = await html2canvas(document.querySelector('.success-page'), {
+        backgroundColor: '#0a0a0a',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        ignoreElements: el =>
+          el.tagName === 'AUDIO' ||
+          el.id === 'tap-to-start',
+      });
+    } catch (err) {
+      console.warn('[Share] html2canvas failed:', err);
+    } finally {
+      toHide.forEach(el => { if (el) el.style.visibility = ''; });
+    }
 
-    if (navigator.canShare) {
+    const shareLink = window.StorageService
+      ? window.StorageService.buildShareLink(proposalId)
+      : window.location.href;
+
+    const shareText = 'They said YES! 💛 Our forever starts today.';
+
+    if (canvas && navigator.canShare) {
       try {
+        const blob = await new Promise(resolve =>
+          canvas.toBlob(resolve, 'image/png', 0.92)
+        );
+        const file = new File([blob], 'forever-yours.png', { type: 'image/png' });
+
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
-            title: 'She Said Yes! 💛',
+            title: 'They Said Yes! 💛',
             text:  shareText,
             files: [file],
           });
           return;
         }
       } catch (err) {
-        if (err.name === 'AbortError') return;
-        console.warn('[Share] File share failed:', err);
+        if (err.name !== 'AbortError') {
+          console.warn('[Share] File share failed, trying URL share:', err);
+        } else {
+          return;
+        }
       }
     }
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'She Said Yes! 💛',
+          title: 'They Said Yes! 💛',
           text:  shareText,
+          url:   shareLink,
         });
-        downloadBlob(blob, 'forever-yours-yes.png');
         return;
       } catch (err) {
         if (err.name === 'AbortError') return;
       }
     }
 
-    downloadBlob(blob, 'forever-yours-yes.png');
-    const span = btnShare?.querySelector('span');
-    if (btnShare && span) {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      const span = btnShare.querySelector('span');
       btnShare.classList.add('copied');
-      span.textContent = 'Photo Saved ✓';
+      if (span) span.textContent = 'Link Copied ✓';
       setTimeout(() => {
         btnShare.classList.remove('copied');
-        span.textContent = 'Share Moment';
-      }, 2800);
+        if (span) span.textContent = 'Share Moment';
+      }, 2500);
+    } catch {
+      alert('Share link: ' + shareLink);
     }
   }
 
@@ -396,9 +400,6 @@
       setShareState(true);
       try {
         await captureAndShare();
-      } catch (err) {
-        console.error('[Share]', err);
-        alert('Could not create your share photo. Please try again in a moment.');
       } finally {
         setShareState(false);
       }
