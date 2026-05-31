@@ -87,39 +87,50 @@
     };
 
     try {
-      const existingId = window.StorageService
-        ? window.StorageService.getProposalId()
-        : null;
+  let existingId = window.StorageService
+    ? window.StorageService.getProposalId()
+    : null;
+  let url = `${API_BASE}/proposals`;
+  let method = 'POST';
+  if (existingId) {
+    url = `${API_BASE}/proposals/${existingId}`;
+    method = 'PATCH';
+  }
+  let res = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload),
+  });
+  if (res.status === 404) {
+    localStorage.clear();
+    res = await fetch(`${API_BASE}/proposals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    const msg = data.errors
+      ? data.errors.join('\n')
+      : (data.message || 'Something went wrong.');
 
-      const url    = existingId
-        ? `${API_BASE}/proposals/${existingId}`
-        : `${API_BASE}/proposals`;
-      const method = existingId ? 'PATCH' : 'POST';
+    throw new Error(msg);
+  }
+  const proposalId = data.proposalId;
+  window.StorageService.saveProposalId(proposalId);
+  showPreview(payload, proposalId);
 
-      const res  = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        const msg = data.errors ? data.errors.join('\n') : (data.message || 'Something went wrong.');
-        throw new Error(msg);
-      }
-
-      const proposalId = data.proposalId || existingId;
-      window.StorageService.saveProposalId(proposalId);
-
-      showPreview(payload, proposalId);
-
-    } catch (err) {
-      console.error('[Form] Submit error:', err);
-      alert('Could not save your proposal:\n' + err.message);
-      btnSubmit.disabled = false;
-      btnSubmit.querySelector('span').textContent = 'Save & Continue';
-    }
+} catch (err) {
+  console.error('[Form] Submit error:', err);
+  alert('Could not save your proposal:\n' + err.message);
+  btnSubmit.disabled = false;
+  btnSubmit.querySelector('span').textContent = 'Save & Continue';
+}
   }
 
   

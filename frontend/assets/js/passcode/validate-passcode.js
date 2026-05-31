@@ -211,11 +211,23 @@
   function renderBoxes() {
     pinBoxes.forEach((box, i) => {
       const val = digits[i];
+      const dotEl = box.querySelector('.pin-dot');
+      const charEl = box.querySelector('.pin-char');
+
       if (revealed) {
-        box.textContent = val || '';
+        if (dotEl) dotEl.style.display = 'none';
+        if (charEl) {
+          charEl.style.display = val ? '' : 'none';
+          charEl.textContent = val || '';
+        }
       } else {
-        box.textContent = val ? '•' : '';
+        if (dotEl) dotEl.style.display = val ? '' : 'none';
+        if (charEl) {
+          charEl.style.display = 'none';
+          charEl.textContent = '';
+        }
       }
+
       box.classList.toggle('filled', val !== '');
       box.classList.toggle('active', i === activeIndex);
     });
@@ -330,6 +342,7 @@
       hiddenInput.value = '';
       setError('');
       renderBoxes();
+      return;
     });
 
     hiddenInput.addEventListener('paste', (e) => {
@@ -350,9 +363,10 @@
   }
 
   if (toggleReveal) {
+    const toggleSpan = toggleReveal.querySelector('span');
     toggleReveal.addEventListener('click', () => {
       revealed = !revealed;
-      toggleReveal.textContent = revealed ? '🙈' : '👁';
+      if (toggleSpan) toggleSpan.textContent = revealed ? 'Hide passcode' : 'Show passcode';
       renderBoxes();
     });
   }
