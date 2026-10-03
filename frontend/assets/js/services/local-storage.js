@@ -127,8 +127,7 @@ const StorageService = (function () {
     if (!pid || !href || href.startsWith('http') || href.startsWith('#')) return href;
     try {
       const url = new URL(href, window.location.origin);
-      const receiverPage = url.pathname.endsWith('enter-passcode.html')
-        || url.pathname.endsWith('memory-lane.html')
+      const receiverPage = url.pathname.endsWith('memory-lane.html')
         || url.pathname.endsWith('love-reveal.html')
         || url.pathname.endsWith('final-acceptance.html')
         || url.pathname.endsWith('received-bouquet.html')
