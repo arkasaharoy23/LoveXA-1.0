@@ -58,8 +58,11 @@
       const nextEl = steps[currentStep - 1];
       if (nextEl) {
         nextEl.classList.add('active');
-        const first = nextEl.querySelector('input, textarea');
-        if (first) setTimeout(() => first.focus(), 80);
+        const heading = nextEl.querySelector('h2');
+        if (heading) {
+          heading.setAttribute('tabindex', '-1');
+          setTimeout(() => heading.focus({ preventScroll: true }), 80);
+        }
       }
       setProgress(currentStep);
     }, 350);
@@ -168,7 +171,11 @@
     currentStep = 1;
     steps[0].classList.add('active');
     setProgress(1);
-    if (inputName) inputName.focus();
+    const firstHeading = steps[0] && steps[0].querySelector('h2');
+    if (firstHeading) {
+      firstHeading.setAttribute('tabindex', '-1');
+      firstHeading.focus({ preventScroll: true });
+    }
     if (btnSubmit) {
       btnSubmit.disabled = false;
       btnSubmit.querySelector('span').textContent = 'Save & Continue';
