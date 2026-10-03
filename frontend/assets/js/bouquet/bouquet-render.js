@@ -56,8 +56,10 @@
       return null;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
-      const res  = await fetch(`${API_BASE}/proposals/${encodeURIComponent(proposalId)}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
+      const res  = await fetch(`${API_BASE}/proposals/${encodeURIComponent(proposalId)}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}', signal: controller.signal });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -77,6 +79,8 @@
       }
     } catch (err) {
       console.warn('[BouquetRender] API fetch failed:', err);
+    } finally {
+      clearTimeout(timeoutId);
     }
 
     return makeFallbackBouquet();
@@ -193,16 +197,19 @@
   }
 
   async function init() {
-    bouquet = await loadBouquetFromAPI();
-    if (bouquet === null) return;
+    // Reveal a bouquet immediately so Render cold starts cannot leave this page blank.
+    bouquet = makeFallbackBouquet();
+    runSequence();
 
-    setTimeout(() => {
-      if (bouquet && bouquet.flowers && bouquet.flowers.length > 0) {
-        runSequence();
-      } else {
-        runFallback();
-      }
-    }, 500);
+    const savedBouquet = await loadBouquetFromAPI();
+    if (!savedBouquet) return;
+    bouquet = savedBouquet.flowers && savedBouquet.flowers.length
+      ? savedBouquet
+      : makeFallbackBouquet();
+
+    // Replace the temporary bouquet with the creator's saved selection.
+    if (flowersContainer) flowersContainer.replaceChildren();
+    runSequence();
   }
 
   init();
