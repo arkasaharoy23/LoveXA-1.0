@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = '/api';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
 
   
   const progressBar  = document.getElementById('progress-bar');
@@ -95,8 +95,10 @@
     };
 
     try {
-  let existingId = window.StorageService
-    ? window.StorageService.getProposalId()
+  // Only resume a creator draft when its creator credential is still present.
+  // A viewer ID or stale tab session must never turn a new proposal into a PATCH.
+  let existingId = window.StorageService && window.StorageService.getCreatorKey()
+    ? window.StorageService.getCreatorProposalId()
     : null;
   let url = `${API_BASE}/proposals`;
   let method = 'POST';
@@ -112,10 +114,14 @@
     },
     body: JSON.stringify(payload),
   });
+  let data;
+  try { data = await res.json(); } catch { data = {}; }
   if (res.status === 404) {
-    throw new Error('This draft is no longer available. Start a new proposal to continue.');
+    const apiNotFound = data.message === 'API route not found.' || data.message === 'Proposal API route not found.';
+    throw new Error(apiNotFound
+      ? 'The proposal API is not available at this address. Open the app through its Node server and try again.'
+      : 'This draft is no longer available. Start a new proposal to continue.');
   }
-  const data = await res.json();
   if (!res.ok || !data.success) {
     const msg = data.errors
       ? data.errors.join('\n')

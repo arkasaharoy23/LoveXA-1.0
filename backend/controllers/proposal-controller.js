@@ -60,7 +60,10 @@ async function updateProposal(req, res, next) {
     const { senderName, recipientName, message } = req.body || {};
 
     const proposal = await Proposal.findOne({ proposalId: id, isActive: true }).select('+creatorKeyHash');
-    if (!proposal) return notFound(res, id);
+    if (!proposal) {
+      if (!req.get('x-creator-key')) return res.status(403).json({ success: false, message: 'Creator authorization is missing. Start a new proposal.' });
+      return notFound(res, id);
+    }
     if (!requireCreator(proposal, req, res)) return;
     if (rejectIfExpired(proposal, res)) return;
 

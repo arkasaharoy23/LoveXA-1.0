@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  const api = '/api/proposals';
+  const api = 'https://lovexa-1-0.onrender.com/api/proposals';
   const flowers = [
     { id: 'rose', name: 'Rose', icon: '🌹', note: 'A timeless expression of love' },
     { id: 'peony', name: 'Peony', icon: '🌺', note: 'Warmth and joyful beginnings' },

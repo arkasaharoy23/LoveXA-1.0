@@ -5,6 +5,7 @@ const StorageService = (function () {
 
   const KEY     = 'forever_yours';
   const PID_PARAM = 'pid';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
 
   function load() {
     try {
@@ -92,6 +93,10 @@ const StorageService = (function () {
     try { return sessionStorage.getItem('fy_viewer_pid') || sessionStorage.getItem('fy_creator_pid'); } catch { return null; }
   }
 
+  function getCreatorProposalId() {
+    try { return sessionStorage.getItem('fy_creator_pid'); } catch { return null; }
+  }
+
   function saveExpiresAt(iso) {
     save({ expiresAt: iso });
   }
@@ -109,8 +114,8 @@ const StorageService = (function () {
   async function fetchProposal(id) {
     const viewerToken = sessionStorage.getItem('fy_viewer_token');
     const response = viewerToken
-      ? await fetch(`/api/proposals/${encodeURIComponent(id || getProposalId())}/view`, { method:'POST', headers:{'Content-Type':'application/json','X-Viewer-Token':viewerToken}, body:'{}' })
-      : await fetch(`/api/proposals/${encodeURIComponent(id || getProposalId())}/summary`, { headers:{'X-Creator-Key':getCreatorKey() || ''} });
+      ? await fetch(`${API_BASE}/proposals/${encodeURIComponent(id || getProposalId())}/view`, { method:'POST', headers:{'Content-Type':'application/json','X-Viewer-Token':viewerToken}, body:'{}' })
+      : await fetch(`${API_BASE}/proposals/${encodeURIComponent(id || getProposalId())}/summary`, { headers:{'X-Creator-Key':getCreatorKey() || ''} });
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.message || 'Could not load proposal.');
     return data.proposal || data.summary;
@@ -151,6 +156,7 @@ const StorageService = (function () {
     clearCreatorKey,
     clearCreatorDraft,
     getProposalId,
+    getCreatorProposalId,
     saveExpiresAt,
     getExpiresAt,
     buildShareLink,

@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = '/api';
+  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
 
   const proposalId = window.StorageService
     ? window.StorageService.getProposalId()
