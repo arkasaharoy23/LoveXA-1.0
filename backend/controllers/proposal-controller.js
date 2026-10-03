@@ -126,7 +126,7 @@ async function setPasscode(req, res, next) {
       });
     }
 
-    const proposal = await Proposal.findOne({ proposalId: id, isActive: true });
+    const proposal = await Proposal.findOne({ proposalId: id, isActive: true }).select('+creatorKeyHash');
     if (!proposal) return notFound(res, id);
     if (rejectIfExpired(proposal, res)) return;
     if (!requireCreator(proposal, req, res)) return;
