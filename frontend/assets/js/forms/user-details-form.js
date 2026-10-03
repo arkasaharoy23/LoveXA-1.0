@@ -109,18 +109,30 @@
     url = `${API_BASE}/proposals/${existingId}`;
     method = 'PATCH';
   }
-  let res = await fetch(url, {
-    method,
+  const sendProposal = (targetUrl, targetMethod, creatorKey) => fetch(targetUrl, {
+    method: targetMethod,
     headers: {
       'Content-Type': 'application/json',
-      ...(existingId && window.StorageService.getCreatorKey() ? { 'X-Creator-Key': window.StorageService.getCreatorKey() } : {})
+      ...(creatorKey ? { 'X-Creator-Key': creatorKey } : {}),
     },
     body: JSON.stringify(payload),
   });
+
+  let res = await sendProposal(url, method, existingId ? window.StorageService.getCreatorKey() : null);
   let data;
   try { data = await res.json(); } catch { data = {}; }
+
+  const apiRouteMissing = response => response.message === 'API route not found.'
+    || response.message === 'Proposal API route not found.';
+  if (method === 'PATCH' && res.status === 404 && !apiRouteMissing(data)) {
+    // Drafts expire on the server. Discard stale creator credentials and retry
+    // this submission as a new proposal instead of making the user start over.
+    if (window.StorageService) window.StorageService.clearCreatorDraft();
+    res = await sendProposal(`${API_BASE}/proposals`, 'POST', null);
+    try { data = await res.json(); } catch { data = {}; }
+  }
   if (res.status === 404) {
-    const apiNotFound = data.message === 'API route not found.' || data.message === 'Proposal API route not found.';
+    const apiNotFound = apiRouteMissing(data);
     throw new Error(apiNotFound
       ? 'The proposal API is not available at this address. Open the app through its Node server and try again.'
       : 'This draft is no longer available. Start a new proposal to continue.');
