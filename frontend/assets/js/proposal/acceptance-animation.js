@@ -14,14 +14,29 @@
     const star = event.target.closest('[data-rating]');
     if (!star) return;
     const rating = Number(star.dataset.rating);
+    const starButtons = reviewStars ? Array.from(reviewStars.querySelectorAll('[data-rating]')) : [];
+    if (!proposalId || !viewerToken) {
+      if (ratingStatus) ratingStatus.textContent = 'Please unlock this proposal again before rating.';
+      return;
+    }
+    starButtons.forEach(button => { button.disabled = true; });
+    if (ratingStatus) ratingStatus.textContent = 'Saving your rating…';
     try {
-      const response = await fetch(`${API_BASE}/proposals/${proposalId}/review`, { method:'POST', headers:{ 'Content-Type':'application/json', 'X-Viewer-Token':viewerToken || '' }, body:JSON.stringify({ rating }) });
-      const result = await response.json();
+      const response = await fetch(`${API_BASE}/proposals/${encodeURIComponent(proposalId)}/review`, { method:'POST', headers:{ 'Content-Type':'application/json', 'X-Viewer-Token':viewerToken }, body:JSON.stringify({ rating }) });
+      let result = {};
+      try { result = await response.json(); } catch { }
       if (!response.ok || !result.success) throw new Error(result.message || 'Could not save rating.');
-      if (reviewStars) reviewStars.querySelectorAll('[data-rating]').forEach(el => { el.textContent = Number(el.dataset.rating) <= rating ? '★' : '☆'; el.setAttribute('aria-pressed', Number(el.dataset.rating) <= rating); });
-      if (ratingStatus) ratingStatus.textContent = 'Thank you for sharing a rating.';
-      sessionStorage.removeItem('fy_viewer_token');
-    } catch (err) { if (ratingStatus) ratingStatus.textContent = err.message; }
+      starButtons.forEach(button => {
+        const selected = Number(button.dataset.rating) <= rating;
+        button.textContent = selected ? '★' : '☆';
+        button.setAttribute('aria-pressed', String(Number(button.dataset.rating) === rating));
+      });
+      if (ratingStatus) ratingStatus.textContent = 'Your rating was saved.';
+    } catch (err) {
+      if (ratingStatus) ratingStatus.textContent = err.message || 'Could not save your rating. Please try again.';
+    } finally {
+      starButtons.forEach(button => { button.disabled = false; });
+    }
   });
 
   const fwCanvas    = document.getElementById('fireworksCanvas');
@@ -448,7 +463,18 @@
   async function init() {
     const proposal = await fetchNames();
     populateNames(proposal);
-    if (ratingWrap && proposal && sessionStorage.getItem('fy_accepted') === '1') ratingWrap.hidden = false;
+    if (ratingWrap && proposal && (sessionStorage.getItem('fy_accepted') === '1' || proposal.acceptedAt)) {
+      ratingWrap.hidden = false;
+      const savedRating = Number(proposal.review && proposal.review.rating) || 0;
+      if (savedRating && reviewStars) {
+        reviewStars.querySelectorAll('[data-rating]').forEach(button => {
+          const value = Number(button.dataset.rating);
+          button.textContent = value <= savedRating ? '★' : '☆';
+          button.setAttribute('aria-pressed', String(value === savedRating));
+        });
+        if (ratingStatus) ratingStatus.textContent = 'Your rating was saved.';
+      }
+    }
 
     playMusic()
       .then(() => {

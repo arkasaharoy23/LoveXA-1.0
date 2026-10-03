@@ -125,6 +125,7 @@ ProposalSchema.methods.toPublic = function () {
     createdAt:       this.createdAt,
     viewedAt:        this.viewedAt,
     acceptedAt:      this.acceptedAt,
+    review:          this.review,
     expiresAt:       this.expiresAt,
     linkActivatedAt: this.linkActivatedAt,
   };

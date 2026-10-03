@@ -357,7 +357,7 @@ async function submitReview(req, res, next) {
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) return res.status(400).json({ success: false, message: 'Choose a rating from 1 to 5.' });
     proposal.review = { rating, createdAt: new Date() };
     await proposal.save();
-    return res.json({ success: true });
+    return res.json({ success: true, review: proposal.review });
   } catch (err) { next(err); }
 }
 

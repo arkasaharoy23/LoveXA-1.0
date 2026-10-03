@@ -11,7 +11,23 @@
     ? `final-acceptance.html?id=${encodeURIComponent(proposalId)}`
     : 'final-acceptance.html';
 
-  let bouquet = window.BouquetStorage ? window.BouquetStorage.load() : null;
+  let bouquet = null;
+
+  function makeFallbackBouquet() {
+    return {
+      flowers: ['🌹', '🌷', '🌸', '💐', '🌺'].map(emoji => ({ emoji, count: 1 })),
+      ribbon: { color: '#c9a84c' },
+    };
+  }
+
+  function returnToPasscode() {
+    if (proposalId) {
+      sessionStorage.removeItem('fy_viewer_token');
+      window.location.replace(`enter-passcode.html?id=${encodeURIComponent(proposalId)}`);
+    } else {
+      window.location.replace('index.html');
+    }
+  }
 
   
   const page            = document.querySelector('.bouquet-receive-page');
@@ -31,10 +47,17 @@
   const savedMessage = document.getElementById('bouquet-message');
 
   async function loadBouquetFromAPI() {
-    if (!proposalId || !viewerToken) return bouquet;
+    if (!proposalId) {
+      window.location.replace('index.html');
+      return null;
+    }
+    if (!viewerToken) {
+      returnToPasscode();
+      return null;
+    }
 
     try {
-      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
+      const res  = await fetch(`${API_BASE}/proposals/${encodeURIComponent(proposalId)}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -43,15 +66,20 @@
         return null;
       }
 
-      if (res.ok && data.success && data.proposal && data.proposal.bouquet) {
+      if (res.status === 401 || res.status === 403) {
+        returnToPasscode();
+        return null;
+      }
+
+      if (res.ok && data.success && data.proposal) {
         if (savedMessage) savedMessage.textContent = data.proposal.message || '';
-        return data.proposal.bouquet;
+        return data.proposal.bouquet || makeFallbackBouquet();
       }
     } catch (err) {
       console.warn('[BouquetRender] API fetch failed:', err);
     }
 
-    return bouquet;
+    return makeFallbackBouquet();
   }
 
   
@@ -140,24 +168,7 @@
   }
 
   function runFallback() {
-    const defaultFlowers = ['🌹','🌷','🌸','💐','🌺'];
-    if (flowersContainer) {
-      defaultFlowers.forEach((emoji, i) => {
-        const span = document.createElement('span');
-        span.className = 'rising-flower';
-        span.textContent = emoji;
-        const angle = ((i / (defaultFlowers.length - 1)) - 0.5) * 50;
-        span.style.setProperty('--rot-start', `${angle * 0.3}deg`);
-        span.style.setProperty('--rot-end',   `${angle}deg`);
-        span.style.setProperty('--rise-y',    '-85px');
-        flowersContainer.appendChild(span);
-      });
-    }
-
-    if (ribbonLine1)  ribbonLine1.style.background  = '#c9a84c';
-    if (ribbonLine2)  ribbonLine2.style.background  = '#c9a84c';
-    if (ribbonBowIcon) ribbonBowIcon.textContent     = '🎀';
-
+    bouquet = makeFallbackBouquet();
     runSequence();
   }
 
