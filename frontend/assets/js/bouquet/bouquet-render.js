@@ -8,8 +8,8 @@
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
   const viewerToken = sessionStorage.getItem('fy_viewer_token');
   const NEXT_PAGE  = proposalId
-    ? `success.html?id=${encodeURIComponent(proposalId)}`
-    : 'success.html';
+    ? `final-acceptance.html?id=${encodeURIComponent(proposalId)}`
+    : 'final-acceptance.html';
 
   let bouquet = window.BouquetStorage ? window.BouquetStorage.load() : null;
 

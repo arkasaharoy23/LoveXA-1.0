@@ -8,8 +8,8 @@
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
   const viewerToken = sessionStorage.getItem('fy_viewer_token');
   const NEXT_PAGE  = proposalId
-    ? `received-bouquet.html?id=${encodeURIComponent(proposalId)}`
-    : 'received-bouquet.html';
+    ? `success.html?id=${encodeURIComponent(proposalId)}`
+    : 'success.html';
 
   
   const page            = document.querySelector('.proposal-page');
@@ -263,6 +263,12 @@
       .catch(() => showTapOverlay());
 
     const proposal = await fetchProposal();
+    if (!proposal) {
+      if (proposalId) {
+        window.location.replace(`enter-passcode.html?id=${encodeURIComponent(proposalId)}`);
+      }
+      return;
+    }
     runReveal(proposal);
   }
 

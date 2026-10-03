@@ -7,8 +7,8 @@
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
   const NEXT_PAGE  = proposalId
-    ? `final-acceptance.html?id=${encodeURIComponent(proposalId)}`
-    : 'final-acceptance.html';
+    ? `received-bouquet.html?id=${encodeURIComponent(proposalId)}`
+    : 'received-bouquet.html';
 
   
   const canvas     = document.getElementById('heartsCanvas');

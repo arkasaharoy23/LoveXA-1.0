@@ -161,7 +161,7 @@ async function verifyPasscode(req, res, next) {
 
     const proposal = await Proposal
       .findOne({ proposalId: id, isActive: true })
-      .select('+passcodeHash +viewerTokenHash +creatorKeyHash');
+      .select('+passcodeHash +viewerTokenHash +viewerTokenExpiresAt +creatorKeyHash');
 
     if (!proposal) return notFound(res, id);
     if (rejectIfExpired(proposal, res)) return;
@@ -216,7 +216,7 @@ async function getProposal(req, res, next) {
 
     const proposal = await Proposal
       .findOne({ proposalId: id, isActive: true })
-      .select('+passcodeHash +viewerTokenHash +creatorKeyHash');
+      .select('+passcodeHash +viewerTokenHash +viewerTokenExpiresAt +creatorKeyHash');
 
     if (!proposal) return notFound(res, id);
     if (rejectIfExpired(proposal, res)) return;
