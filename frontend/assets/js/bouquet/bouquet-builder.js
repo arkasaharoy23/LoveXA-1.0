@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   
   const FLOWERS = [
@@ -297,6 +297,8 @@
 
   
   async function handleBuild() {
+    window.location.replace(window.StorageService.withPid('enter-passcode.html'));
+    return;
     if (!selectedWrapping || !selectedRibbon || getTotalFlowers() === 0) return;
 
     const proposalId = window.StorageService
@@ -329,7 +331,7 @@
     try {
       const res = await fetch(`${API_BASE}/proposals/${proposalId}/bouquet`, {
         method:  'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Creator-Key': window.StorageService.getCreatorKey() || '' },
         body:    JSON.stringify({ bouquet: bouquetData }),
       });
 

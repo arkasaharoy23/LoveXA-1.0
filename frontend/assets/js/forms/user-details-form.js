@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   
   const progressBar  = document.getElementById('progress-bar');
@@ -33,8 +33,16 @@
 
   
   function setProgress(step) {
+    const percent = Math.round((step / TOTAL) * 100);
+    const fill = document.getElementById('creator-progress-fill');
+    const caption = document.getElementById('creator-progress-caption');
+    const percentLabel = document.getElementById('creator-progress-percent');
+    const labels = ['Your name', 'Their name', 'Your words'];
+    if (fill) fill.style.width = `${percent}%`;
+    if (caption) caption.textContent = `Step ${step} of ${TOTAL} · ${labels[step - 1]}`;
+    if (percentLabel) percentLabel.textContent = `${percent}%`;
     if (!progressBar) return;
-    progressBar.style.width = ((step / TOTAL) * 100) + '%';
+    progressBar.style.width = percent + '%';
     const wrap = progressBar.closest('[role="progressbar"]');
     if (wrap) wrap.setAttribute('aria-valuenow', Math.round((step / TOTAL) * 100));
   }
@@ -99,19 +107,13 @@
   let res = await fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...(existingId && window.StorageService.getCreatorKey() ? { 'X-Creator-Key': window.StorageService.getCreatorKey() } : {})
     },
     body: JSON.stringify(payload),
   });
   if (res.status === 404) {
-    localStorage.clear();
-    res = await fetch(`${API_BASE}/proposals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-    });
+    throw new Error('This draft is no longer available. Start a new proposal to continue.');
   }
   const data = await res.json();
   if (!res.ok || !data.success) {
@@ -122,8 +124,9 @@
     throw new Error(msg);
   }
   const proposalId = data.proposalId;
+  if (data.creatorKey) window.StorageService.saveCreatorKey(data.creatorKey);
   window.StorageService.saveProposalId(proposalId);
-  showPreview(payload, proposalId);
+    showPreview(payload, proposalId);
 
 } catch (err) {
   console.error('[Form] Submit error:', err);

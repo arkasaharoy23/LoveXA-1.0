@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="assets/css/form.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
   <link rel="stylesheet" href="assets/css/responsive.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/css/theme-refresh.css">
 </head>
 <body>
 
@@ -54,28 +56,32 @@
     <div class="form-page__glow" aria-hidden="true"></div>
 
     
+    <header class="creator-heading">
+      <span class="creator-kicker">A little love, made personal <span aria-hidden="true">♡</span></span>
+      <h1 class="creator-title">Let's make something <em>beautiful</em></h1>
+      <p class="creator-subtitle">A few little steps, then your story is ready to share.</p>
+      <div class="creator-progress" aria-label="Your proposal progress">
+        <div class="creator-progress__track"><span id="creator-progress-fill"></span></div>
+        <div class="creator-progress__labels"><span id="creator-progress-caption">Step 1 of 3 · Your name</span><span id="creator-progress-percent">33%</span></div>
+      </div>
+    </header>
+
     <div class="steps-wrapper" role="form" aria-label="Proposal creation form">
 
       
       <div class="step active" id="step-1" role="group" aria-labelledby="step1-question">
 
-        <span class="step__counter" aria-label="Step 1 of 3">01 &nbsp;/&nbsp; 03</span>
+        <span class="step__counter" aria-label="Step 1 of 3"><span class="step__emoji">👋</span> FIRST, THE SENDER</span>
 
-        <div class="step__ornament" aria-hidden="true">
-          <span class="step__ornament-line"></span>
-          <span class="step__ornament-diamond"></span>
-          <span class="step__ornament-line"></span>
-        </div>
-
-        <h1 class="step__question" id="step1-question">What is your name?</h1>
-        <p class="step__hint">The name that will sign this moment forever</p>
+        <h2 class="step__question" id="step1-question">What should we call you?</h2>
+        <p class="step__hint">Your name will appear at the end of your letter.</p>
 
         <div class="field-wrap">
           <input
             type="text"
             id="input-name"
             class="input-line"
-            placeholder="Your name…"
+            placeholder="Your lovely name"
             autocomplete="given-name"
             maxlength="60"
             aria-label="Your name"
@@ -95,23 +101,17 @@
       
       <div class="step" id="step-2" role="group" aria-labelledby="step2-question">
 
-        <span class="step__counter" aria-label="Step 2 of 3">02 &nbsp;/&nbsp; 03</span>
+        <span class="step__counter" aria-label="Step 2 of 3"><span class="step__emoji">💌</span> WHO IS IT FOR?</span>
 
-        <div class="step__ornament" aria-hidden="true">
-          <span class="step__ornament-line"></span>
-          <span class="step__ornament-diamond"></span>
-          <span class="step__ornament-line"></span>
-        </div>
-
-        <h2 class="step__question" id="step2-question">Who is this for?</h2>
-        <p class="step__hint">The name of the one who will receive this forever</p>
+        <h2 class="step__question" id="step2-question">Who makes your heart happy?</h2>
+        <p class="step__hint">We'll make sure this little surprise has their name on it.</p>
 
         <div class="field-wrap">
           <input
             type="text"
             id="input-for"
             class="input-line"
-            placeholder="Their name…"
+            placeholder="Their lovely name"
             autocomplete="off"
             maxlength="60"
             aria-label="Recipient's name"
@@ -132,25 +132,19 @@
       
       <div class="step" id="step-3" role="group" aria-labelledby="step3-question">
 
-        <span class="step__counter" aria-label="Step 3 of 3">03 &nbsp;/&nbsp; 03</span>
+        <span class="step__counter" aria-label="Step 3 of 3"><span class="step__emoji">✍️</span> YOUR WORDS</span>
 
-        <div class="step__ornament" aria-hidden="true">
-          <span class="step__ornament-line"></span>
-          <span class="step__ornament-diamond"></span>
-          <span class="step__ornament-line"></span>
-        </div>
-
-        <h2 class="step__question" id="step3-question">Write your proposal</h2>
-        <p class="step__hint">In your own words — from your heart to theirs</p>
+        <h2 class="step__question" id="step3-question">Write what you feel</h2>
+        <p class="step__hint">It doesn't have to be perfect. It just has to be yours.</p>
 
         <div class="field-wrap">
           <textarea
             id="input-message"
             class="input-textarea"
-            placeholder="From the moment I first saw you…"
+            placeholder="A little note, a favorite memory, or all the reasons you love them…"
             aria-label="Your proposal message"
             aria-required="true"
-            rows="10"
+            rows="7"
             maxlength="2000"
           ></textarea>
           <span class="char-count" id="char-count" aria-live="polite">0 / 2000</span>
@@ -158,8 +152,8 @@
 
         <div class="step-actions">
           <button class="btn-back" id="btn-back-3" aria-label="Go back to step 2">← Back</button>
-          <button class="btn-submit" id="btn-submit" disabled aria-label="Save and continue">
-            <span>Save & Continue</span>
+          <button class="btn-submit" id="btn-submit" disabled aria-label="Preview your letter">
+            <span>Preview your letter</span>
           </button>
         </div>
 
@@ -171,7 +165,7 @@
     
     <article class="preview-card" id="preview-card" aria-label="Proposal preview" aria-live="polite">
 
-      <p class="preview__label">Your Proposal Preview</p>
+      <p class="preview__label">A little peek at your letter <span aria-hidden="true">♡</span></p>
 
       <h2 class="preview__from-to">
         From <span id="preview-from">—</span> to <span id="preview-to">—</span>

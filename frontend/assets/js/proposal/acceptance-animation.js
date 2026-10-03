@@ -1,11 +1,28 @@
 (function () {
   'use strict';
 
-  const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
-  const passcode   = sessionStorage.getItem('fy_pass');
+  const viewerToken = sessionStorage.getItem('fy_viewer_token');
+  const ratingWrap = document.getElementById('review-rating');
+  const ratingStatus = document.getElementById('review-status');
+  const reviewStars = ratingWrap ? ratingWrap.querySelector('.review-stars') : null;
+  if (ratingWrap) ratingWrap.hidden = true;
+  if (ratingWrap) ratingWrap.addEventListener('click', async (event) => {
+    const star = event.target.closest('[data-rating]');
+    if (!star) return;
+    const rating = Number(star.dataset.rating);
+    try {
+      const response = await fetch(`${API_BASE}/proposals/${proposalId}/review`, { method:'POST', headers:{ 'Content-Type':'application/json', 'X-Viewer-Token':viewerToken || '' }, body:JSON.stringify({ rating }) });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Could not save rating.');
+      if (reviewStars) reviewStars.querySelectorAll('[data-rating]').forEach(el => { el.textContent = Number(el.dataset.rating) <= rating ? '★' : '☆'; el.setAttribute('aria-pressed', Number(el.dataset.rating) <= rating); });
+      if (ratingStatus) ratingStatus.textContent = 'Thank you for sharing a rating.';
+      sessionStorage.removeItem('fy_viewer_token');
+    } catch (err) { if (ratingStatus) ratingStatus.textContent = err.message; }
+  });
 
   const fwCanvas    = document.getElementById('fireworksCanvas');
   const cfCanvas    = document.getElementById('confettiCanvas');
@@ -278,11 +295,9 @@
   }
 
   async function fetchNames() {
-    if (!proposalId || !passcode) return null;
+    if (!proposalId || !viewerToken) return null;
     try {
-      const res  = await fetch(
-        `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-      );
+      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
       const data = await res.json();
       return (res.ok && data.success) ? data.proposal : null;
     } catch { return null; }
@@ -342,7 +357,7 @@
       ? window.StorageService.buildShareLink(proposalId)
       : window.location.href;
 
-    const shareText = 'They said YES! 💛 Our forever starts today.';
+  const shareText = 'A lovely moment worth celebrating 💛';
 
     if (canvas && navigator.canShare) {
       try {
@@ -370,28 +385,22 @@
 
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'They Said Yes! 💛',
-          text:  shareText,
-          url:   shareLink,
-        });
+        await navigator.share({ title: 'A lovely moment', text: shareText });
         return;
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-      }
+      } catch (err) { if (err.name === 'AbortError') return; }
     }
 
     try {
-      await navigator.clipboard.writeText(shareLink);
+      await navigator.clipboard.writeText(shareText);
       const span = btnShare.querySelector('span');
       btnShare.classList.add('copied');
-      if (span) span.textContent = 'Link Copied ✓';
+      if (span) span.textContent = 'Copied ✓';
       setTimeout(() => {
         btnShare.classList.remove('copied');
         if (span) span.textContent = 'Share Moment';
       }, 2500);
     } catch {
-      alert('Share link: ' + shareLink);
+      alert(shareText);
     }
   }
 
@@ -439,6 +448,7 @@
   async function init() {
     const proposal = await fetchNames();
     populateNames(proposal);
+    if (ratingWrap && proposal && sessionStorage.getItem('fy_accepted') === '1') ratingWrap.hidden = false;
 
     playMusic()
       .then(() => {

@@ -43,12 +43,18 @@ The app is a **single Node process** that serves the API and static frontend.
 |----------|----------|-------------|
 | `NODE_ENV` | Yes | Set to `production` |
 | `MONGO_URI` | Yes | MongoDB connection string |
+| `CLOUDINARY_CLOUD_NAME` | Yes for uploads | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Yes for uploads | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Yes for uploads | Cloudinary API secret; server only |
+| `CREATOR_KEY_SECRET` | Yes | Random secret of at least 32 characters used for private creator/viewer keys |
 | `ALLOWED_ORIGINS` | Yes | Your public site URL, e.g. `https://foreveryours.com` |
 | `PORT` | Usually set by host | Default `5000` |
 | `PROPOSAL_TTL_HOURS` | No | Active link lifetime after passcode (default `24`) |
 | `PROPOSAL_DRAFT_TTL_HOURS` | No | Draft lifetime without passcode (default `72`) |
 
 **Never commit `.env`** — configure variables in your hosting dashboard.
+
+Uploaded photos are sent to Cloudinary from the backend. MongoDB stores only their Cloudinary delivery URLs. Configure a Cloudinary account and the three Cloudinary environment values before enabling photo uploads. Existing proposals that used the old base64 storage or do not have a creator key need to be recreated with the new flow.
 
 ### Start command
 

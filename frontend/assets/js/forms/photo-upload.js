@@ -3,10 +3,11 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
   const MAX_MEMORY = 10;
   const MAX_KB     = 500;
   const MAX_DIM    = 1200;
+  const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 
   
   const proposalId = window.StorageService
@@ -250,6 +251,10 @@
       showCoupleError('Please upload a JPEG, PNG, or WebP image.');
       return;
     }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      showCoupleError('Choose an image smaller than 8 MB.');
+      return;
+    }
     try {
       const b64 = await compressImage(file);
       setCouplePhoto(b64);
@@ -356,13 +361,15 @@
     }
 
     const toProcess = Array.from(files).slice(0, remaining);
+    const oversized = toProcess.filter(file => file.size > MAX_UPLOAD_BYTES);
+    if (oversized.length) showMemoryError('Some files were skipped because they exceed 8 MB.');
     const invalid   = toProcess.filter(f => !isValidType(f));
 
     if (invalid.length) {
       showMemoryError('Some files were skipped — only JPEG, PNG, or WebP accepted.');
     }
 
-    for (const file of toProcess.filter(f => isValidType(f))) {
+    for (const file of toProcess.filter(f => isValidType(f) && f.size <= MAX_UPLOAD_BYTES)) {
       try {
         const b64 = await compressImage(file);
         memoryPhotosB64.push(b64);
@@ -406,13 +413,16 @@
     btnSave.classList.add('loading');
 
     try {
+      const formData = new FormData();
+      const coupleBlob = await (await fetch(couplePhotoB64)).blob();
+      formData.append('couplePhoto', coupleBlob, 'couple.jpg');
+      for (let i = 0; i < memoryPhotosB64.length; i++) {
+        formData.append('memoryPhotos', await (await fetch(memoryPhotosB64[i])).blob(), `memory-${i + 1}.jpg`);
+      }
       const res = await fetch(`${API_BASE}/proposals/${proposalId}/photos`, {
         method:  'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          couplePhoto:  couplePhotoB64,
-          memoryPhotos: memoryPhotosB64,
-        }),
+        headers: { 'X-Creator-Key': window.StorageService.getCreatorKey() || '' },
+        body: formData,
       });
 
       const data = await res.json();

@@ -5,6 +5,7 @@ require('dotenv').config();
 const fs              = require('fs');
 const express         = require('express');
 const cors            = require('cors');
+const helmet          = require('helmet');
 const path            = require('path');
 const connectDB       = require('./config/database');
 const proposalRoutes  = require('./routes/proposal-routes');
@@ -40,6 +41,7 @@ function validateProductionEnv() {
   const missing = [];
   if (!process.env.MONGO_URI) missing.push('MONGO_URI');
   if (!allowedOrigins.length) missing.push('ALLOWED_ORIGINS');
+  if (!process.env.CREATOR_KEY_SECRET || process.env.CREATOR_KEY_SECRET.length < 32) missing.push('CREATOR_KEY_SECRET (32+ characters)');
 
   if (missing.length) {
     console.error('\n❌ Production startup blocked — set these in your host environment:\n');
@@ -92,13 +94,14 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: (origin, callback) => callback(null, isOriginAllowed(origin)),
+  credentials: false,
 }));
 
-app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 app.use('/api/proposals', proposalRoutes);
 
@@ -120,9 +123,9 @@ if (frontend) {
 
   if (frontend.layout === 'nested') {
     app.use('/assets', express.static(frontend.assetsRoot, { maxAge: staticOpts.maxAge }));
-    app.use(express.static(frontend.htmlRoot, staticOpts));
+  app.use(express.static(frontend.htmlRoot, staticOpts));
   } else {
-    app.use(express.static(frontend.htmlRoot, staticOpts));
+  app.use(express.static(frontend.htmlRoot, staticOpts));
   }
 
   app.get('/', (req, res, next) => {

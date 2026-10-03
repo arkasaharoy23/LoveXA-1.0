@@ -5,6 +5,8 @@ html, body {
   background: #000;
 }
 
+.review-panel{position:relative;z-index:2;text-align:center;margin:16px 0;color:#f2e8df;font-family:inherit}.review-panel[hidden]{display:none}.review-panel p{margin:0 0 5px;font-size:13px}.review-panel small{font-size:10px;color:#c9a84c}.review-stars{display:flex;justify-content:center;gap:5px}.review-stars button{border:0;background:transparent;color:#e1bf7e;font-size:25px;cursor:pointer;padding:2px 4px}.review-stars button:focus-visible{outline:1px solid #e1bf7e;border-radius:4px}
+
 .success-page {
   position: fixed;
   inset: 0;

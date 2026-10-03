@@ -3,14 +3,14 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
-  const passcode   = sessionStorage.getItem('fy_pass');
+  const viewerToken = sessionStorage.getItem('fy_viewer_token');
 
-  if (!proposalId || !passcode) {
+  if (!proposalId || !viewerToken) {
     const idParam = proposalId ? `?id=${encodeURIComponent(proposalId)}` : '';
     window.location.href = `enter-passcode.html${idParam}`;
     return;
@@ -50,9 +50,7 @@
   
   async function fetchProposal() {
     try {
-      const res  = await fetch(
-        `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-      );
+      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -281,9 +279,7 @@
     const proposal = await fetchProposal();
 
     const senderName = proposal ? proposal.senderName : '';
-    photos = (proposal && proposal.memoryPhotos && proposal.memoryPhotos.length > 0)
-      ? proposal.memoryPhotos
-      : [];
+    photos = proposal ? [proposal.couplePhoto, ...(proposal.memoryPhotos || [])].filter(Boolean) : [];
 
     if (senderName) {
       document.title = `For ${proposal.recipientName || 'You'} — Forever Yours`;

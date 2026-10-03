@@ -2,20 +2,20 @@
 
 :root {
   
-  --black:        #0a0a0a;
-  --black-soft:   #111111;
-  --black-card:   #161616;
-  --black-hover:  #1e1e1e;
-  --gold:         #c9a84c;
-  --gold-light:   #e2c47a;
-  --gold-dim:     #9a7a35;
-  --gold-glow:    rgba(201, 168, 76, 0.25);
-  --champagne:    #f5e6c8;
-  --champagne-dim:#e8d5a8;
+  --black:        #110f12;
+  --black-soft:   #191619;
+  --black-card:   #211c20;
+  --black-hover:  #2b2429;
+  --gold:         #d4ad81;
+  --gold-light:   #eed6b9;
+  --gold-dim:     #a77b64;
+  --gold-glow:    rgba(201, 130, 139, 0.22);
+  --champagne:    #f4e9e5;
+  --champagne-dim:#e6d4ce;
   --white:        #ffffff;
   --white-soft:   #f0ece4;
   --text-primary: #f0ece4;
-  --text-muted:   #9a9080;
+  --text-muted:   #b6a8ab;
   --text-dark:    #2a2420;
 
   
@@ -43,6 +43,8 @@
   --shadow-card:  0 8px 40px rgba(0, 0, 0, 0.6);
   --shadow-deep:  0 20px 80px rgba(0, 0, 0, 0.8);
 }
+
+body{background-image:radial-gradient(ellipse at 8% 8%,rgba(151,78,94,.14),transparent 32%),radial-gradient(ellipse at 92% 88%,rgba(157,119,93,.10),transparent 35%)}
 
 *, *::before, *::after {
   margin: 0;

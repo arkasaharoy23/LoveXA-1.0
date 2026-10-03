@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   const proposalId = window.StorageService
     ? window.StorageService.getProposalId()
@@ -51,7 +51,7 @@
 
   function showExpiry(iso) {
     if (!privacyExpires || !iso) return;
-    privacyExpires.textContent = `Deletes permanently after: ${formatExpiry(iso)}`;
+    privacyExpires.textContent = `Link expires: ${formatExpiry(iso)}`;
     privacyExpires.hidden = false;
   }
 
@@ -138,7 +138,7 @@
 
   if (btnCopy) btnCopy.addEventListener('click', handleCopy);
 
-  const expiryNote = 'Note: This link expires in 24 hours — then everything is permanently deleted for your privacy.';
+  const expiryNote = 'This link expires at the time shown on your page.';
 
   if (btnWA) {
     btnWA.addEventListener('click', () => {
@@ -199,7 +199,7 @@
 
   async function fetchSummary() {
     try {
-      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/summary`);
+      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/summary`, { headers: { 'X-Creator-Key': window.StorageService.getCreatorKey() || '' } });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -210,6 +210,11 @@
 
       if (res.ok && data.success && data.summary) {
         populateSummaryFromData(data.summary);
+        if (btnWA) btnWA.hidden = false;
+        if (btnEmail) btnEmail.hidden = false;
+        if (btnCopy) btnCopy.hidden = false;
+        // The creator key only needs to survive until this protected summary is loaded.
+        window.StorageService.clearCreatorKey();
         return;
       }
     } catch (err) {

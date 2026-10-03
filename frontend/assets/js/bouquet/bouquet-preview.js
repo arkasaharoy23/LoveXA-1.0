@@ -4,7 +4,7 @@
   'use strict';
 
   
-  const bouquet = window.BouquetStorage ? window.BouquetStorage.load() : null;
+  let bouquet = window.BouquetStorage ? window.BouquetStorage.load() : null;
 
   if (!bouquet || !bouquet.flowers || bouquet.flowers.length === 0) {
     const back = window.StorageService

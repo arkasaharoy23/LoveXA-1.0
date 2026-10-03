@@ -11,6 +11,11 @@ function errorMiddleware(err, req, res, next) {
     return res.status(400).json({ success: false, errors });
   }
 
+  if (err.name === 'MulterError') {
+    const message = err.code === 'LIMIT_FILE_SIZE' ? 'An image exceeds the upload size limit.' : 'The selected images could not be uploaded.';
+    return res.status(400).json({ success: false, message });
+  }
+
   
   if (err.code === 11000) {
     return res.status(409).json({

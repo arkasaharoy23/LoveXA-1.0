@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   const params = new URLSearchParams(window.location.search);
   const urlId = params.get('id');
@@ -38,6 +38,11 @@
     if (!proposalId) {
       alert('No proposal found. Please start from the beginning.');
       window.location.href = 'create-proposal.html';
+      return;
+    }
+
+    if (!window.StorageService.getCreatorKey()) {
+      window.location.replace(window.StorageService.withPid('create-proposal.html'));
       return;
     }
 
@@ -149,7 +154,7 @@
       try {
         const res = await fetch(`${API_BASE}/proposals/${proposalId}/passcode`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Creator-Key': window.StorageService.getCreatorKey() || '' },
           body: JSON.stringify({ passcode: pass1.value }),
         });
 
@@ -163,7 +168,7 @@
         if (successEl) successEl.classList.add('show');
 
         setTimeout(() => {
-          window.location.href = 'generate-link.html';
+          window.location.href = window.StorageService.withPid('generate-link.html');
         }, 2000);
 
       } catch (err) {
@@ -412,7 +417,7 @@
     setError('');
 
     try {
-      const res = await fetch(`${API_BASE}/proposals/${proposalId}/verify`, {
+      const res = await fetch(`${API_BASE}/proposals/${proposalId}/unlock`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ passcode }),
@@ -423,16 +428,13 @@
       if (!res.ok || !data.success) {
         throw new Error(data.message || 'Incorrect passcode.');
       }
-
-      sessionStorage.setItem('fy_pass', passcode);
-      sessionStorage.setItem('fy_pid', proposalId);
+      sessionStorage.setItem('fy_viewer_token', data.viewerToken);
+      sessionStorage.setItem('fy_viewer_pid', proposalId);
 
       if (btnUnlock) btnUnlock.classList.remove('loading');
 
       try {
-        const proposalRes = await fetch(
-          `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-        );
+        const proposalRes = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'X-Viewer-Token': data.viewerToken, 'Content-Type': 'application/json' }, body: '{}' });
         const proposalData = await proposalRes.json();
 
         if (proposalRes.ok && proposalData.success && proposalData.proposal) {

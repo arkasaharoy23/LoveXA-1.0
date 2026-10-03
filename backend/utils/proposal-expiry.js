@@ -22,8 +22,7 @@ function isExpired(proposal) {
   return new Date(proposal.expiresAt) <= new Date();
 }
 
-const EXPIRED_MESSAGE =
-  'This link has expired. Your message, photos, and bouquet have been permanently deleted to protect your privacy.';
+const EXPIRED_MESSAGE = 'This proposal link has expired.';
 
 module.exports = {
   TTL_HOURS,

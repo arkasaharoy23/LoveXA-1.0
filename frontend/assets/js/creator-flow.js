@@ -5,6 +5,12 @@
 
   if (!window.StorageService) return;
 
+  const page = window.location.pathname.split('/').pop() || '';
+  const params = new URLSearchParams(window.location.search);
+  const isRecipientPage = ['memory-lane.html', 'love-reveal.html', 'final-acceptance.html', 'received-bouquet.html', 'success.html'].includes(page)
+    || (page === 'enter-passcode.html' && params.has('id'));
+  if (isRecipientPage) return;
+
   const pid = window.StorageService.getProposalId();
 
   const CREATOR_PAGES = [
@@ -16,13 +22,9 @@
     'generate-link.html',
   ];
 
-  const page = window.location.pathname.split('/').pop() || '';
-
   if (CREATOR_PAGES.includes(page) && !pid) {
-    const params = new URLSearchParams(window.location.search);
-    const isRecipientPasscode = page === 'enter-passcode.html' && params.has('id');
     const isCreatePage        = page === 'create-proposal.html';
-    if (!isRecipientPasscode && !isCreatePage) {
+    if (!isCreatePage) {
       window.StorageService.redirectToCreate(`missing pid on ${page}`);
       return;
     }

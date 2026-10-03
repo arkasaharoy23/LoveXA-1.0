@@ -4,10 +4,6 @@
 
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
-const {
-  decompressString,
-  decompressPhotoArray,
-} = require('../utils/media-compress');
 
 const BouquetFlowerSchema = new mongoose.Schema(
   {
@@ -56,6 +52,10 @@ const ProposalSchema = new mongoose.Schema(
       select:  false,
     },
 
+    creatorKeyHash: { type: String, required: true, select: false },
+    viewerTokenHash: { type: String, default: null, select: false },
+    viewerTokenExpiresAt: { type: Date, default: null, select: false },
+
     couplePhoto: {
       type:    String,
       default: null,
@@ -75,6 +75,10 @@ const ProposalSchema = new mongoose.Schema(
         flowers:  [BouquetFlowerSchema],
         ribbon:   mongoose.Schema.Types.Mixed,
         wrapping: mongoose.Schema.Types.Mixed,
+        greenery: mongoose.Schema.Types.Mixed,
+        card: mongoose.Schema.Types.Mixed,
+        theme: mongoose.Schema.Types.Mixed,
+        message: String,
         builtAt:  String,
       },
       default: null,
@@ -99,6 +103,12 @@ const ProposalSchema = new mongoose.Schema(
       type:    Date,
       default: null,
     },
+
+    acceptedAt: { type: Date, default: null },
+    review: {
+      rating: { type: Number, min: 1, max: 5, default: null },
+      createdAt: { type: Date, default: null },
+    },
   },
   { timestamps: true }
 );
@@ -109,11 +119,12 @@ ProposalSchema.methods.toPublic = function () {
     senderName:      this.senderName,
     recipientName:   this.recipientName,
     message:         this.message,
-    couplePhoto:     decompressString(this.couplePhoto),
-    memoryPhotos:    decompressPhotoArray(this.memoryPhotos),
+    couplePhoto:     this.couplePhoto,
+    memoryPhotos:    this.memoryPhotos,
     bouquet:         this.bouquet,
     createdAt:       this.createdAt,
     viewedAt:        this.viewedAt,
+    acceptedAt:      this.acceptedAt,
     expiresAt:       this.expiresAt,
     linkActivatedAt: this.linkActivatedAt,
   };
@@ -126,8 +137,11 @@ ProposalSchema.methods.toSummary = function () {
     recipientName: this.recipientName,
     message:       this.message,
     bouquet:       this.bouquet,
+    couplePhoto:   this.couplePhoto,
+    memoryPhotos:  this.memoryPhotos,
     expiresAt:     this.expiresAt,
     expiresInHours: parseInt(process.env.PROPOSAL_TTL_HOURS, 10) || 24,
+    review: this.review || null,
   };
 };
 

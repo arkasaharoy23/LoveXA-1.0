@@ -1,15 +1,15 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
-  const passcode   = sessionStorage.getItem('fy_pass');
+  const viewerToken = sessionStorage.getItem('fy_viewer_token');
   const NEXT_PAGE  = proposalId
-    ? `success.html?id=${encodeURIComponent(proposalId)}`
-    : 'success.html';
+    ? `received-bouquet.html?id=${encodeURIComponent(proposalId)}`
+    : 'received-bouquet.html';
 
   
   const page            = document.querySelector('.proposal-page');
@@ -86,11 +86,9 @@
 
   
   async function fetchProposal() {
-    if (!proposalId || !passcode) return null;
+    if (!proposalId || !viewerToken) return null;
     try {
-      const res  = await fetch(
-        `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-      );
+      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -227,7 +225,16 @@
 
 
   
-  function handleYes() {
+  async function handleYes() {
+    try {
+      const accepted = await fetch(`${API_BASE}/proposals/${proposalId}/accept`, { method: 'POST', headers: { 'X-Viewer-Token': viewerToken || '' } });
+    const acceptedData = await accepted.json();
+    if (!accepted.ok || !acceptedData.success) throw new Error(acceptedData.message || 'Could not record acceptance.');
+      sessionStorage.setItem('fy_accepted', '1');
+    } catch (error) {
+      if (letterBody) letterBody.textContent = `${letterBody.textContent}\n\n${error.message}`;
+      return;
+    }
     if (btnYes) {
       btnYes.textContent = '♥ Yes ♥';
       btnYes.style.transform = 'scale(1.15)';

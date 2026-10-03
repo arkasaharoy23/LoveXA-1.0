@@ -4,7 +4,7 @@
 
 const bcrypt = require('bcryptjs');
 
-const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
+const SALT_ROUNDS = Math.min(14, Math.max(10, parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12));
 
 
 async function hashPasscode(plaintext) {

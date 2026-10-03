@@ -1,15 +1,15 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'https://lovexa-1-0.onrender.com/api';
+  const API_BASE = '/api';
 
   
   const params     = new URLSearchParams(window.location.search);
   const proposalId = params.get('id') || sessionStorage.getItem('fy_pid');
-  const passcode   = sessionStorage.getItem('fy_pass');
+  const viewerToken = sessionStorage.getItem('fy_viewer_token');
   const NEXT_PAGE  = proposalId
-    ? `final-acceptance.html?id=${encodeURIComponent(proposalId)}`
-    : 'final-acceptance.html';
+    ? `success.html?id=${encodeURIComponent(proposalId)}`
+    : 'success.html';
 
   let bouquet = window.BouquetStorage ? window.BouquetStorage.load() : null;
 
@@ -28,14 +28,13 @@
   const ribbonLine2     = document.getElementById('ribbon-line-2');
   const ribbonBowIcon   = document.getElementById('ribbon-bow-icon');
   const tapHint         = document.getElementById('tap-hint');
+  const savedMessage = document.getElementById('bouquet-message');
 
   async function loadBouquetFromAPI() {
-    if (!proposalId || !passcode) return bouquet;
+    if (!proposalId || !viewerToken) return bouquet;
 
     try {
-      const res  = await fetch(
-        `${API_BASE}/proposals/${proposalId}?passcode=${encodeURIComponent(passcode)}`
-      );
+      const res  = await fetch(`${API_BASE}/proposals/${proposalId}/view`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Viewer-Token': viewerToken }, body: '{}' });
       const data = await res.json();
 
       if (res.status === 410) {
@@ -45,6 +44,7 @@
       }
 
       if (res.ok && data.success && data.proposal && data.proposal.bouquet) {
+        if (savedMessage) savedMessage.textContent = data.proposal.message || '';
         return data.proposal.bouquet;
       }
     } catch (err) {
